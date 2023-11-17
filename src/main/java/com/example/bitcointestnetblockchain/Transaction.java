@@ -1,9 +1,9 @@
 package com.example.bitcointestnetblockchain;
 
 public class Transaction {
-    public toA
+    public int fromAddress;
+    public int toAddress;
     long transactionHash;
     public Transaction() {
-        itn
     }
 }
