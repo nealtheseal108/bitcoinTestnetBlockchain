@@ -1,5 +1,6 @@
 package com.example.bitcointestnetblockchain;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -37,6 +38,12 @@ class TotalBlockchainNodeList {
         }
 
         return null;
+    }
+
+    public static void printTotalBlockchainNodeList() throws UnsupportedEncodingException {
+        for (BlockchainNode blockchainNode: BlockchainNodeList) {
+            blockchainNode.printBlockchainNode();
+        }
     }
 
 }

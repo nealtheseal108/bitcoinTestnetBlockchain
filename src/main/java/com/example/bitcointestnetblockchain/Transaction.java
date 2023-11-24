@@ -67,6 +67,6 @@ public class Transaction {
     }
 
     public void printTransaction() {
-        System.out.println("This transaction, " + getTransactionHash() + ", proposes that " + getFromUserName() + ", or " + getFromAddress() + " sends " + getTransferAmount() + " to " + getToAddress() + ".");
+        System.out.println("This transaction, " + new String(getTransactionHash(), StandardCharsets.US_ASCII) + ", proposes that " + getFromUserName() + ", or " + new String(getFromAddress(), StandardCharsets.US_ASCII) + " sends " + getTransferAmount() + " to " + new String(getToAddress(), StandardCharsets.US_ASCII) + ".");
     }
 }

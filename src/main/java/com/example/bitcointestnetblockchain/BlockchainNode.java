@@ -1,5 +1,6 @@
 package com.example.bitcointestnetblockchain;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -69,15 +70,28 @@ public class BlockchainNode {
         this.outputTransactionList.add(transaction);
     }
 
-    public void printBlockchainNode() {
-        System.out.println("This node, " + getUsername() + " or " + getAddress() + " has an balance of " + getBalance() + ".");
-        System.out.print("Its input transactions include ");
-        for (Transaction inputTransaction: inputTransactionList) {
-            System.out.print(inputTransaction);
-
+    public void printBlockchainNode() throws UnsupportedEncodingException {
+        System.out.println("'" + getUsername() + "' or '" + new String(getAddress(), StandardCharsets.US_ASCII) + "', has a balance of " + getBalance() + ".");
+        if (!inputTransactionList.isEmpty()) {
+            System.out.print("Its input transactions include ");
+            for (Transaction inputTransaction: inputTransactionList) {
+                if (inputTransactionList.get(inputTransactionList.size() - 1).equals(inputTransaction)) {
+                    System.out.print(" and ");
+                }
+                System.out.print(new String(inputTransaction.getFromAddress(), StandardCharsets.US_ASCII) + " sending " + inputTransaction.getTransferAmount() + " to this address, ");
+            }
+            System.out.println(".");
         }
-        System.out.println(".");
-        System.out.print("Its output transactions include");
-        System.out.println(".");
+        if (!outputTransactionList.isEmpty()) {
+            System.out.print("Its output transactions include ");
+            for (Transaction outputTransaction: outputTransactionList) {
+                if (outputTransactionList.get(outputTransactionList.size() - 1).equals(outputTransaction)) {
+                    System.out.print(" and ");
+                }
+                System.out.print("This address sending " + outputTransaction.getTransferAmount() + " to " + new String(outputTransaction.getToAddress(), StandardCharsets.US_ASCII) + ", ");
+            }
+            System.out.println(".");
+        }
+
     }
 }

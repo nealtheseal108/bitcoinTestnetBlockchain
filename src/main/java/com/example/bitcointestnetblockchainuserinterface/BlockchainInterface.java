@@ -5,13 +5,14 @@ import com.example.bitcointestnetblockchain.Blockchain;
 import com.example.bitcointestnetblockchain.BlockchainNode;
 import com.example.bitcointestnetblockchain.Transaction;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class BlockchainInterface {
-    public static void main(String[] args) throws NoSuchAlgorithmException {
+    public static void main(String[] args) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         // Initialize SHA-256 hash algorithm
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
@@ -55,6 +56,9 @@ public class BlockchainInterface {
         transactions1.add(new Transaction("shrihun", shantanuNode.getAddress(), 10));
         transactions1.add(new Transaction("shrihun", shyamNode.getAddress(), 10));
         transactions1.add(new Transaction("shrihun", saumitraNode.getAddress(), 10));
+
+        // print entire list of nodes in blockchain
+        blockchain.printTotalBlockchainNodeList();
 
         // Construct block 1
         Block block1 = new Block(false, blockchain.getBlockchain().getLast().getPrevHash(), transactions1, digest.digest("shubham".getBytes(StandardCharsets.UTF_16)));
