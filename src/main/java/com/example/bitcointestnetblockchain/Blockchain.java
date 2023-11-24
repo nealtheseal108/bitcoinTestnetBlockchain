@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class Blockchain {
-    static LinkedList<Block> blockchain;
-    static TotalNodeList totalNodeList;
+    public static LinkedList<Block> blockchain;
+    public static TotalNodeList totalNodeList;
     public Blockchain() {
         blockchain = new LinkedList<>();
         totalNodeList = new TotalNodeList();
@@ -16,8 +16,8 @@ public class Blockchain {
 
     public boolean addNewBlock
 
-    class TotalNodeList {
-        private static ArrayList<Node> nodeList;
+    protected class TotalNodeList {
+        protected static ArrayList<Node> nodeList;
         public TotalNodeList() {
             nodeList = new ArrayList<>();
         }
@@ -54,33 +54,57 @@ public class Blockchain {
     }
 
     class Block {
-        private byte[] prevHash;
-        private ArrayList<Transaction> transactions;
+        protected byte[] prevHash;
+        protected ArrayList<Transaction> transactions;
+        protected byte[] minerAddress;
+        protected byte[] thisBlockHash;
+        protected MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        public Block(byte[] prevHash, ArrayList<Transaction> transactions, byte[] minerAddress) throws NoSuchAlgorithmException {
+            this.prevHash = prevHash;
+            this.transactions = transactions;
+            this.minerAddress = minerAddress;
+            byte[] blockHashPreHashConcat = new byte[2048];
+            int iterator = 0;
+            for (Transaction transaction: transactions) {
+                for (byte b: transaction.getTransactionHash()) {
+                    blockHashPreHashConcat[iterator] = b;
+                    iterator++;
+                }
+            }
+
+
+            for (byte b: this.minerAddress) {
+                blockHashPreHashConcat[iterator] = b;
+                iterator++;
+            }
+            this.thisBlockHash = digest.digest(blockHashPreHashConcat);
+        }
     }
 
     class Node {
-        private String username;
-        private byte[] address;
-        private boolean isMining;
-        private int balance;
+        protected final String username;
+        protected final byte[] address;
+        protected final boolean isMining;
+        protected int balance;
 
-        public ArrayList<Transaction> transactions;
-        private MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        public ArrayList<Transaction> inputTransactionList;
+        public ArrayList<Transaction> outputTransactionList;
+        protected MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
-        public Node(String username, boolean isMining) throws NoSuchAlgorithmException {
+        protected Node(String username, boolean isMining) throws NoSuchAlgorithmException {
             this.username = username;
             this.address = digest.digest(username.getBytes(StandardCharsets.UTF_8));
             this.isMining = isMining;
             this.balance = 0;
-            ArrayList<Transaction>
+            inputTransactionList = new ArrayList<>();
+            outputTransactionList = new ArrayList<>();
             addToTotalNodeList();
         }
 
         public boolean transact(String username, byte[] toAddress, int sentBalance) {
-            if (this.balance < balance || digest.digest(username.getBytes(StandardCharsets.UTF_8)) != address || totalNodeList.getNodeByAddress(toAddress) == null) {
+            if (this.balance < sentBalance || digest.digest(username.getBytes(StandardCharsets.UTF_8)) != address || totalNodeList.getNodeByAddress(toAddress) == null) {
                 return false;
             }
-
 
             totalNodeList.getNodeByAddress(toAddress).receiveFunds(sentBalance);
             this.balance -= sentBalance;
@@ -88,7 +112,7 @@ public class Blockchain {
 
         }
 
-        private boolean addToTotalNodeList() {
+        protected boolean addToTotalNodeList() {
             if (totalNodeList.getNodeByAddress(this.address) == null) {
                 totalNodeList.addNodeToList(this);
                 return true;
@@ -97,32 +121,32 @@ public class Blockchain {
             return false;
         }
 
-        private byte[] getAddress() {
+        protected byte[] getAddress() {
             return address;
         }
 
-        private boolean isMining() {
+        protected boolean isMining() {
             return isMining;
         }
 
-        private int getBalance() {
+        protected int getBalance() {
             return balance;
         }
 
-        private void receiveFunds(int funds) {
+        protected void receiveFunds(int funds) {
             this.balance += funds;
         }
     }
 
     class Transaction {
-        private byte[] fromAddress;
-        private byte[] toAddress;
-        private byte[] minerAddress;
-        private int transferAmount;
-        private boolean isCoinbaseTransaction;
+        protected final byte[] fromAddress;
+        protected final byte[] toAddress;
+        protected final byte[] minerAddress;
+        protected final int transferAmount;
+        protected final boolean isCoinbaseTransaction;
 
-        private MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        private byte[] transactionHash;
+        protected MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        protected final byte[] transactionHash;
         protected Transaction(byte[] fromAddress, byte[] toAddress, byte[] minerAddress, int transferAmount, boolean isCoinbaseTransaction) throws NoSuchAlgorithmException {
             this.fromAddress = fromAddress;
             this.toAddress = toAddress;
@@ -130,42 +154,54 @@ public class Blockchain {
             this.transferAmount = transferAmount;
             byte[] transferAmountBytesArray = new byte[]{(byte) transferAmount};
             this.isCoinbaseTransaction = isCoinbaseTransaction;
-            byte[] isCoinbaseTransactionBytesArray = new byte[]{true ? 1 : 0};
+            byte[] isCoinbaseTransactionBytesArray = new byte[]{(byte) (this.isCoinbaseTransaction ? 1 : 0)};
             byte[] transactionHashPreHashConcat = new byte[2048];
             int iterator = 0;
-            for (int i = 0; iterator < fromAddress.length; iterator++) {
-                transactionHashPreHashConcat[i] = transactionHashPreHashConcat[iterator];
+            for (byte address : fromAddress) {
+                transactionHashPreHashConcat[iterator] = address;
                 iterator++;
             }
-            for (int i = 0; i < toAddress.length; i++) {
-                transactionHashPreHashConcat[i] = transactionHashPreHashConcat[iterator];
+            for (byte address : toAddress) {
+                transactionHashPreHashConcat[iterator] = address;
+                iterator++;
             }
-            this.transactionHash = digest.digest(new byte[fromAddress + toAddress + minerAddress + transferAmountBytesArray + isCoinbaseTransactionBytesArray]);
+            for (byte address : minerAddress) {
+                transactionHashPreHashConcat[iterator] = address;
+                iterator++;
+            }
+            for (byte amount : transferAmountBytesArray) {
+                transactionHashPreHashConcat[iterator] = amount;
+                iterator++;
+            }
+            for (byte b : isCoinbaseTransactionBytesArray) {
+                transactionHashPreHashConcat[iterator] = b;
+                iterator++;
+            }
+            this.transactionHash = digest.digest(transactionHashPreHashConcat);
         }
 
-        public byte[] getFromAddress() {
+        protected byte[] getFromAddress() {
             return fromAddress;
         }
 
-        public byte[] getToAddress() {
+        protected byte[] getToAddress() {
             return toAddress;
         }
 
-        public byte[] getMinerAddress() {
+        protected byte[] getMinerAddress() {
             return minerAddress;
         }
 
-        public int getTransferAmount() {
+        protected int getTransferAmount() {
             return transferAmount;
         }
 
-        public boolean isCoinbaseTransaction() {
+        protected boolean isCoinbaseTransaction() {
             return isCoinbaseTransaction;
         }
 
-        public byte[] getTransactionHash() {
+        protected byte[] getTransactionHash() {
             return transactionHash;
         }
     }
-
 }
