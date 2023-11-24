@@ -20,16 +20,16 @@ class Transaction {
         byte[] transferAmountBytesArray = new byte[]{(byte) transferAmount};
         byte[] transactionHashPreHashConcat = new byte[2048];
         int iterator = 0;
-        for (byte address : fromAddress) {
-            transactionHashPreHashConcat[iterator] = address;
+        for (int i = 0; i < fromAddress.length; i++) {
+            transactionHashPreHashConcat[iterator] = fromAddress[i];
             iterator++;
         }
-        for (byte address : toAddress) {
-            transactionHashPreHashConcat[iterator] = address;
+        for (int i = 0; i < toAddress.length; i++) {
+            transactionHashPreHashConcat[iterator] = toAddress[i];
             iterator++;
         }
-        for (byte amount : transferAmountBytesArray) {
-            transactionHashPreHashConcat[iterator] = amount;
+        for (int i = 0; i < transferAmountBytesArray.length; i++) {
+            transactionHashPreHashConcat[iterator] = transferAmountBytesArray[i];
             iterator++;
         }
         this.transactionHash = digest.digest(transactionHashPreHashConcat);

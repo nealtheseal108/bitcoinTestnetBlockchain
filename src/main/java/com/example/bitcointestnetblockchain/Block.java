@@ -14,7 +14,7 @@ public class Block {
     public Block(byte[] prevHash, ArrayList<Transaction> transactions, byte[] minerAddress) throws NoSuchAlgorithmException {
         this.prevHash = prevHash;
         this.transactions = transactions;
-        if (Objects.equals(TotalBlockchainNodeList.getBlockchainNodeByAddress(minerAddress), null)) {
+        if (!Objects.equals(TotalBlockchainNodeList.getBlockchainNodeByAddress(minerAddress), null)) {
             this.minerAddress = minerAddress;
         } else {
             this.minerAddress = null;

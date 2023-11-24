@@ -12,9 +12,13 @@ public class BlockchainInterface {
         BlockchainNode genesisBlockMiner = new BlockchainNode("Shrihun");
         blockchain.addBlockchainNode(genesisBlockMiner);
 
-        blockchain.addNewBlock(new Block(null, null, genesisBlockMiner.getAddress()));
+        // Create a new block
+        Block newBlock = new Block(null, null, genesisBlockMiner.getAddress());
 
+        // Add the new block to the blockchain
+        blockchain.addNewBlock(newBlock);
+
+        // Print the updated blockchain
         blockchain.printBlockchain();
     }
 }
-
