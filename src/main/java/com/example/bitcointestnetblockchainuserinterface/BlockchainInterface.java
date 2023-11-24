@@ -62,15 +62,16 @@ public class BlockchainInterface {
 
         System.out.println("\n\n");
 
-        // Construct block 1
+        // construct block 1
         Block block1 = new Block(false, blockchain.getBlockchain().getLast().getThisBlockHash(), transactions1, digest.digest("shubham".getBytes(StandardCharsets.UTF_16)));
 
         // add block 1 to blockchain
         blockchain.addNewBlock(block1);
 
-        // Print the updated blockchain
+        // print the updated blockchain
         blockchain.printBlockchain();
 
-        System.out.println(blockchain.getBlockchain().get(1).getPrevHash());
+        // reprint all nodes and their balances
+        blockchain.printTotalBlockchainNodeList();
     }
 }

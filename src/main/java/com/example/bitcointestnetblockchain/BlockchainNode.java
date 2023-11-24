@@ -26,7 +26,7 @@ public class BlockchainNode {
         addToTotalBlockchainNodeList();
     }
 
-    public boolean transact(String username, byte[] toAddress, int sentBalance) {
+    protected boolean transact(String username, byte[] toAddress, int sentBalance) {
         if (this.balance < sentBalance || !(Arrays.equals(digest.digest(username.getBytes(StandardCharsets.UTF_16)), address)) || Objects.equals(TotalBlockchainNodeList.getBlockchainNodeByAddress(toAddress), null)) {
             return false;
         }
@@ -71,22 +71,37 @@ public class BlockchainNode {
     }
 
     public void printBlockchainNode() throws UnsupportedEncodingException {
-        System.out.println("'" + getUsername() + "' or '" + Base64.getEncoder().encodeToString(getAddress()) + "', has a balance of " + getBalance() + ".");
+        System.out.println(Base64.getEncoder().encodeToString(getAddress()) + " has a balance of " + getBalance() + " coins.");
         if (!inputTransactionList.isEmpty()) {
-            System.out.print("Its input transactions include ");
-            for (Transaction inputTransaction: inputTransactionList) {
-                if (inputTransactionList.get(inputTransactionList.size() - 1).equals(inputTransaction)) {
-                    System.out.print(" and ");
+            System.out.println("\t This node's input transactions");
+            System.out.println("\t\tNon-coinbase transactions");
+            for (int i = 0; i < inputTransactionList.size(); i++) {
+                ArrayList<byte[]> coinbaseTransactions = new ArrayList<>();
+                Transaction inputTransaction = inputTransactionList.get(i);
+                if (Arrays.equals(inputTransaction.getFromAddress(), null)) {
+                    coinbaseTransactions.add(inputTransaction.getTransactionHash());
+                } else {
+                    if (inputTransaction.getFromAddress() != null) {
+                        System.out.println("\t\t\t" +  Base64.getEncoder().encodeToString(inputTransaction.getTransactionHash()) + ": " + Base64.getEncoder().encodeToString(inputTransaction.getFromAddress()) + " sent " + inputTransaction.getTransferAmount() + " coins to this node.");
+                    }
                 }
-                if (inputTransaction.getFromAddress() != null) {
-                    System.out.print(Base64.getEncoder().encodeToString(inputTransaction.getFromAddress()) + " sending " + inputTransaction.getTransferAmount() + " to this address, ");
+                if (inputTransactionList.get(inputTransactionList.size() - 1).equals(inputTransaction)) {
+                    System.out.println("\t\tCoinbase transactions");
+                }
+                if (coinbaseTransactions.isEmpty()) {
+                    System.out.println("None.");
+                } else {
+                    for (byte[] coinbaseTransactionHash: coinbaseTransactions) {
+                        System.out.print("\t\t\t");
+                        System.out.println("");
+                    }
                 }
             }
-            System.out.println(".");
         }
         if (!outputTransactionList.isEmpty()) {
-            System.out.print("Its output transactions include ");
-            for (Transaction outputTransaction: outputTransactionList) {
+            System.out.print("\t\t This node's output transactions include ");
+            for (int i = 0; i < outputTransactionList.size(); i++) {
+                Transaction outputTransaction = outputTransactionList.get(i);
                 if (outputTransactionList.get(outputTransactionList.size() - 1).equals(outputTransaction)) {
                     System.out.print(" and ");
                 }

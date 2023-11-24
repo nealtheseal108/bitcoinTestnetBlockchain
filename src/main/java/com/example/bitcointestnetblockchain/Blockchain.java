@@ -33,22 +33,24 @@ public class Blockchain {
             } else {
                  return false;
             }
-        } else if (block.getMinerAddress() != null && Arrays.equals(block.getPrevHash(), blockchain.getLast().getPrevHash())) {
+        } else if (!(Arrays.equals(block.getMinerAddress(), null)) && Arrays.equals(block.getPrevHash(), blockchain.getLast().getThisBlockHash())) {
             blockchain.add(block);
             network.coinbaseTransaction(block.getMinerAddress());
             totalBlockchainNodeList.getBlockchainNodeByAddress(block.getMinerAddress()).inputTransactionList.add(new Transaction(null, block.getMinerAddress(), 100));
-            for (Transaction transaction: block.getTransactions()) {
+            for (int i = 0; i < block.getTransactions().size(); i++) {
+                Transaction transaction = block.getTransactions().get(i);
                 totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getToAddress()).addTransactionToInputList(transaction);
                 totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getFromAddress()).addTransactionToOutputList(transaction);
+                totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getFromAddress()).transact(transaction.getFromUserName(), transaction.getToAddress(), transaction.getTransferAmount());
             }
             return true;
         }
-
         return false;
     }
 
     public void printBlockchain() throws UnsupportedEncodingException {
-        for (Block block: blockchain) {
+        for (int i = 0; i < blockchain.size(); i++) {
+            Block block = blockchain.get(i);
             System.out.println("Block " + blockchain.indexOf(block) + "\n");
             if (block.getPrevHash() != null && !block.isGenesis()) {
                 System.out.println("Previous block hash: " + Base64.getEncoder().encodeToString(block.getPrevHash()) + ".");

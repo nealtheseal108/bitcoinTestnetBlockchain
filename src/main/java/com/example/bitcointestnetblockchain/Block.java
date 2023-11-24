@@ -25,8 +25,10 @@ public class Block {
         byte[] blockHashPreHashConcat = new byte[2048];
         int iterator = 0;
         if (!(Objects.equals(transactions, null))) {
-            for (Transaction transaction: transactions) {
-                for (byte b: transaction.getTransactionHash()) {
+            for (int i = 0; i < transactions.size(); i++) {
+                Transaction transaction = transactions.get(i);
+                for (int j = 0; j < transaction.getTransactionHash().length; j++) {
+                    byte b = transaction.getTransactionHash()[j];
                     blockHashPreHashConcat[iterator] = b;
                     iterator++;
                 }

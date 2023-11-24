@@ -31,9 +31,10 @@ class TotalBlockchainNodeList {
     }
 
     public static BlockchainNode getBlockchainNodeByAddress(byte[] address) {
-        for (BlockchainNode BlockchainNode : BlockchainNodeList) {
-            if (Arrays.equals(BlockchainNode.getAddress(), address)) {
-                return BlockchainNode;
+        for (int i = 0; i < BlockchainNodeList.size(); i++) {
+            BlockchainNode blockchainNode = BlockchainNodeList.get(i);
+            if (Arrays.equals(blockchainNode.getAddress(), address)) {
+                return blockchainNode;
             }
         }
 
@@ -41,7 +42,8 @@ class TotalBlockchainNodeList {
     }
 
     public static void printTotalBlockchainNodeList() throws UnsupportedEncodingException {
-        for (BlockchainNode blockchainNode: BlockchainNodeList) {
+        for (int i = 0; i < BlockchainNodeList.size(); i++) {
+            BlockchainNode blockchainNode = BlockchainNodeList.get(i);
             blockchainNode.printBlockchainNode();
         }
     }
