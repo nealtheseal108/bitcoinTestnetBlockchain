@@ -6,12 +6,15 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Block {
+
+    private boolean isGenesis;
     private byte[] prevHash;
     private ArrayList<Transaction> transactions;
     private byte[] minerAddress;
     private byte[] thisBlockHash;
     private MessageDigest digest = MessageDigest.getInstance("SHA-256");
-    public Block(byte[] prevHash, ArrayList<Transaction> transactions, byte[] minerAddress) throws NoSuchAlgorithmException {
+    public Block(boolean isGenesis, byte[] prevHash, ArrayList<Transaction> transactions, byte[] minerAddress) throws NoSuchAlgorithmException {
+        this.isGenesis = isGenesis;
         this.prevHash = prevHash;
         this.transactions = transactions;
         if (!Objects.equals(TotalBlockchainNodeList.getBlockchainNodeByAddress(minerAddress), null)) {
@@ -35,6 +38,10 @@ public class Block {
             iterator++;
         }
         this.thisBlockHash = digest.digest(blockHashPreHashConcat);
+    }
+
+    public boolean isGenesis() {
+        return isGenesis;
     }
 
     public byte[] getPrevHash() {

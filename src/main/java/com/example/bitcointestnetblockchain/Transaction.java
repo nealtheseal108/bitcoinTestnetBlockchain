@@ -1,40 +1,55 @@
 package com.example.bitcointestnetblockchain;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 
-class Transaction {
-    private final byte[] fromAddress;
+public class Transaction {
+
+    private String fromUserName;
+    private byte[] fromAddress = null;
     private final byte[] toAddress;
     private final int transferAmount;
 
-    private ArrayList<Transaction> inputTransactionList;
-    private ArrayList<Transaction> outputTransactionList;
     private MessageDigest digest = MessageDigest.getInstance("SHA-256");
     private final byte[] transactionHash;
-    Transaction(byte[] fromAddress, byte[] toAddress, int transferAmount) throws NoSuchAlgorithmException {
-        this.fromAddress = fromAddress;
+    public Transaction(String fromUserName, byte[] toAddress, int transferAmount) throws NoSuchAlgorithmException {
+        this.fromUserName = fromUserName;
+        if (fromUserName != null) {
+            this.fromAddress = digest.digest(fromUserName.getBytes(StandardCharsets.UTF_16));
+        }
         this.toAddress = toAddress;
         this.transferAmount = transferAmount;
         byte[] transferAmountBytesArray = new byte[]{(byte) transferAmount};
         byte[] transactionHashPreHashConcat = new byte[2048];
         int iterator = 0;
-        for (int i = 0; i < fromAddress.length; i++) {
-            transactionHashPreHashConcat[iterator] = fromAddress[i];
-            iterator++;
+        if (fromAddress != null) {
+            for (int i = 0; i < fromAddress.length; i++) {
+                transactionHashPreHashConcat[iterator] = fromAddress[i];
+                iterator++;
+            }
         }
-        for (int i = 0; i < toAddress.length; i++) {
-            transactionHashPreHashConcat[iterator] = toAddress[i];
-            iterator++;
+
+        if (toAddress != null) {
+            for (int i = 0; i < toAddress.length; i++) {
+                transactionHashPreHashConcat[iterator] = toAddress[i];
+                iterator++;
+            }
         }
-        for (int i = 0; i < transferAmountBytesArray.length; i++) {
-            transactionHashPreHashConcat[iterator] = transferAmountBytesArray[i];
-            iterator++;
+
+        if (transferAmount > 0) {
+            for (int i = 0; i < transferAmountBytesArray.length; i++) {
+                transactionHashPreHashConcat[iterator] = transferAmountBytesArray[i];
+                iterator++;
+            }
         }
+
         this.transactionHash = digest.digest(transactionHashPreHashConcat);
     }
 
+    protected String getFromUserName() {
+        return fromUserName;
+    }
     public byte[] getFromAddress() {
         return fromAddress;
     }
@@ -51,11 +66,7 @@ class Transaction {
         return transactionHash;
     }
 
-    public void addTransactionToInputList(Transaction transaction) {
-        this.inputTransactionList.add(transaction);
-    }
-
-    public void addTransactionToOutputList(Transaction transaction) {
-        this.outputTransactionList.add(transaction);
+    public void printTransaction() {
+        System.out.println("This transaction, " + getTransactionHash() + ", proposes that " + getFromUserName() + ", or " + getFromAddress() + " sends " + getTransferAmount() + " to " + getToAddress() + ".");
     }
 }

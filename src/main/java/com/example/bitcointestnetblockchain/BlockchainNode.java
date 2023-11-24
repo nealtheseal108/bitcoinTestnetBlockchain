@@ -18,7 +18,7 @@ public class BlockchainNode {
 
     public BlockchainNode(String username) throws NoSuchAlgorithmException {
         this.username = username;
-        this.address = digest.digest(username.getBytes(StandardCharsets.UTF_8));
+        this.address = digest.digest(username.getBytes(StandardCharsets.UTF_16));
         this.balance = 0;
         inputTransactionList = new ArrayList<>();
         outputTransactionList = new ArrayList<>();
@@ -26,7 +26,7 @@ public class BlockchainNode {
     }
 
     public boolean transact(String username, byte[] toAddress, int sentBalance) {
-        if (this.balance < sentBalance || !(Arrays.equals(digest.digest(username.getBytes(StandardCharsets.UTF_8)), address)) || Objects.equals(TotalBlockchainNodeList.getBlockchainNodeByAddress(toAddress), null)) {
+        if (this.balance < sentBalance || !(Arrays.equals(digest.digest(username.getBytes(StandardCharsets.UTF_16)), address)) || Objects.equals(TotalBlockchainNodeList.getBlockchainNodeByAddress(toAddress), null)) {
             return false;
         }
 
@@ -43,6 +43,10 @@ public class BlockchainNode {
         }
 
         return false;
+    }
+
+    private String getUsername() {
+        return username;
     }
 
     public byte[] getAddress() {
@@ -63,5 +67,17 @@ public class BlockchainNode {
 
     public void addTransactionToOutputList(Transaction transaction) {
         this.outputTransactionList.add(transaction);
+    }
+
+    public void printBlockchainNode() {
+        System.out.println("This node, " + getUsername() + " or " + getAddress() + " has an balance of " + getBalance() + ".");
+        System.out.print("Its input transactions include ");
+        for (Transaction inputTransaction: inputTransactionList) {
+            System.out.print(inputTransaction);
+
+        }
+        System.out.println(".");
+        System.out.print("Its output transactions include");
+        System.out.println(".");
     }
 }
