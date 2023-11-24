@@ -3,6 +3,7 @@ package com.example.bitcointestnetblockchain;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 public class Transaction {
 
@@ -67,6 +68,6 @@ public class Transaction {
     }
 
     public void printTransaction() {
-        System.out.println("This transaction, " + new String(getTransactionHash(), StandardCharsets.US_ASCII) + ", proposes that " + getFromUserName() + ", or " + new String(getFromAddress(), StandardCharsets.US_ASCII) + " sends " + getTransferAmount() + " to " + new String(getToAddress(), StandardCharsets.US_ASCII) + ".");
+        System.out.println("This transaction, " + Base64.getEncoder().encodeToString(getTransactionHash()) + ", proposes that " + getFromUserName() + ", or " + Base64.getEncoder().encodeToString(getFromAddress()) + " sends " + getTransferAmount() + " to " + Base64.getEncoder().encodeToString(getToAddress()) + ".");
     }
 }

@@ -1,10 +1,10 @@
 package com.example.bitcointestnetblockchain;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.LinkedList;
 
 public class Blockchain {
@@ -32,7 +32,7 @@ public class Blockchain {
                 return true;
             } else {
                  return false;
-             }
+            }
         } else if (block.getMinerAddress() != null && Arrays.equals(block.getPrevHash(), blockchain.getLast().getPrevHash())) {
             blockchain.add(block);
             network.coinbaseTransaction(block.getMinerAddress());
@@ -50,15 +50,17 @@ public class Blockchain {
     public void printBlockchain() throws UnsupportedEncodingException {
         for (Block block: blockchain) {
             System.out.println("Block " + blockchain.indexOf(block) + "\n");
-            System.out.println("Previous block hash: " + new String(block.getPrevHash(), StandardCharsets.US_ASCII) + ".");
+            if (block.getPrevHash() != null && !block.isGenesis()) {
+                System.out.println("Previous block hash: " + Base64.getEncoder().encodeToString(block.getPrevHash()) + ".");
+            }
             if (block.getTransactions() != null) {
                 for (Transaction transaction: block.getTransactions()) {
-                    System.out.print(new String(transaction.getFromAddress(), StandardCharsets.US_ASCII) + " sent " + transaction.getTransferAmount() + " to " + new String(transaction.getToAddress(), StandardCharsets.US_ASCII) + ". " + "The balance of " + new String(transaction.getFromAddress(), StandardCharsets.US_ASCII) + " is now " + totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getFromAddress()).getBalance() + " and the balance of " + new String(transaction.getToAddress(), StandardCharsets.US_ASCII) + " is now " + totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getToAddress()).getBalance() + ". \n");
+                    System.out.print(Base64.getEncoder().encodeToString(transaction.getFromAddress()) + " sent " + transaction.getTransferAmount() + " coins to " + Base64.getEncoder().encodeToString(transaction.getToAddress()) + ". \n");
                 }
             }
 
-            System.out.print(new String(block.getMinerAddress(), StandardCharsets.US_ASCII) + " received 100 coins for their computational effort expended to create the block.\n");
-            System.out.print("This block hash: " + new String(block.getThisBlockHash(), StandardCharsets.US_ASCII));
+            System.out.print(Base64.getEncoder().encodeToString(block.getMinerAddress()) + " received 100 coins for their computational effort expended to create the block.\n");
+            System.out.print("This block hash: " + Base64.getEncoder().encodeToString(block.getThisBlockHash()));
             System.out.println("\n\n");
         }
     }

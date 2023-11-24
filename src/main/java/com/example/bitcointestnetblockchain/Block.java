@@ -48,10 +48,6 @@ public class Block {
         return this.prevHash;
     }
 
-    public void setPrevHashNull() {
-        this.prevHash = null;
-    }
-
     public ArrayList<Transaction> getTransactions() {
         return this.transactions;
     }

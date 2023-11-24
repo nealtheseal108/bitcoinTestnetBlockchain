@@ -42,7 +42,10 @@ public class BlockchainInterface {
         BlockchainNode saumitraNode = new BlockchainNode("saumitra");
         blockchain.addBlockchainNode(saumitraNode);
 
-        // Create a new block
+        // print entire list of nodes in blockchain
+        blockchain.printTotalBlockchainNodeList();
+
+        // Create block 0 with "shrihun" as the block miner
         Block block0 = new Block(true, null, null, shrihunNode.getAddress());
 
         // Add the new block to the blockchain
@@ -57,16 +60,17 @@ public class BlockchainInterface {
         transactions1.add(new Transaction("shrihun", shyamNode.getAddress(), 10));
         transactions1.add(new Transaction("shrihun", saumitraNode.getAddress(), 10));
 
-        // print entire list of nodes in blockchain
-        blockchain.printTotalBlockchainNodeList();
+        System.out.println("\n\n");
 
         // Construct block 1
-        Block block1 = new Block(false, blockchain.getBlockchain().getLast().getPrevHash(), transactions1, digest.digest("shubham".getBytes(StandardCharsets.UTF_16)));
+        Block block1 = new Block(false, blockchain.getBlockchain().getLast().getThisBlockHash(), transactions1, digest.digest("shubham".getBytes(StandardCharsets.UTF_16)));
 
         // add block 1 to blockchain
         blockchain.addNewBlock(block1);
 
         // Print the updated blockchain
         blockchain.printBlockchain();
+
+        System.out.println(blockchain.getBlockchain().get(1).getPrevHash());
     }
 }

@@ -6,13 +6,13 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Objects;
 
 public class BlockchainNode {
     private final String username;
     private final byte[] address;
     private int balance;
-
     ArrayList<Transaction> inputTransactionList;
     private ArrayList<Transaction> outputTransactionList;
     private MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -71,14 +71,16 @@ public class BlockchainNode {
     }
 
     public void printBlockchainNode() throws UnsupportedEncodingException {
-        System.out.println("'" + getUsername() + "' or '" + new String(getAddress(), StandardCharsets.US_ASCII) + "', has a balance of " + getBalance() + ".");
+        System.out.println("'" + getUsername() + "' or '" + Base64.getEncoder().encodeToString(getAddress()) + "', has a balance of " + getBalance() + ".");
         if (!inputTransactionList.isEmpty()) {
             System.out.print("Its input transactions include ");
             for (Transaction inputTransaction: inputTransactionList) {
                 if (inputTransactionList.get(inputTransactionList.size() - 1).equals(inputTransaction)) {
                     System.out.print(" and ");
                 }
-                System.out.print(new String(inputTransaction.getFromAddress(), StandardCharsets.US_ASCII) + " sending " + inputTransaction.getTransferAmount() + " to this address, ");
+                if (inputTransaction.getFromAddress() != null) {
+                    System.out.print(Base64.getEncoder().encodeToString(inputTransaction.getFromAddress()) + " sending " + inputTransaction.getTransferAmount() + " to this address, ");
+                }
             }
             System.out.println(".");
         }
@@ -88,7 +90,7 @@ public class BlockchainNode {
                 if (outputTransactionList.get(outputTransactionList.size() - 1).equals(outputTransaction)) {
                     System.out.print(" and ");
                 }
-                System.out.print("This address sending " + outputTransaction.getTransferAmount() + " to " + new String(outputTransaction.getToAddress(), StandardCharsets.US_ASCII) + ", ");
+                System.out.print("This address sending " + outputTransaction.getTransferAmount() + " to " + Base64.getEncoder().encodeToString(outputTransaction.getToAddress()) + ", ");
             }
             System.out.println(".");
         }
