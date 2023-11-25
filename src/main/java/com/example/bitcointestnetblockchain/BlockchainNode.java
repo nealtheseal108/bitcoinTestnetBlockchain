@@ -19,6 +19,7 @@ public class BlockchainNode {
     private MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
     public BlockchainNode(Blockchain blockchain, String username) throws NoSuchAlgorithmException {
+        this.blockchain = blockchain;
         this.username = username;
         this.address = digest.digest(username.getBytes(StandardCharsets.UTF_16));
         this.balance = 0;

@@ -5,6 +5,7 @@ class Network {
     private Blockchain blockchain;
 
     protected Network(Blockchain blockchain) {
+        this.blockchain = blockchain;
         this.coins = 21000000;
     }
 
