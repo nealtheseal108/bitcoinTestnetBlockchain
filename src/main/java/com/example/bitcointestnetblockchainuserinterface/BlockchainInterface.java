@@ -69,6 +69,47 @@ public class BlockchainInterface {
         // print the updated blockchain
         blockchain.printBlockchain();
 
+        // print the status and transaction history of all nodes
+        blockchain.printTotalBlockchainNodeList();
+
+        // compile transactions for block 2
+        ArrayList<Transaction> transactions2 = new ArrayList<>();
+        transactions2.add(new Transaction(blockchain, "shubham", nealNode.getAddress(), 40, 2));
+        transactions2.add(new Transaction(blockchain, "shubham", jayNode.getAddress(), 20, 2));
+        transactions2.add(new Transaction(blockchain, "saumitra", saumitraNode.getAddress(), 20, 2));
+        transactions2.add(new Transaction(blockchain, "saumitra", saumitraNode.getAddress(), 20, 2));
+        transactions2.add(new Transaction(blockchain, "saumitra", saumitraNode.getAddress(), 20, 2));
+
+        // construct block 2
+        Block block2 = new Block(blockchain, false, blockchain.getBlockchain().getLast().getThisBlockHash(), transactions2, saumitraNode.getAddress());
+
+        // add block 2; the malicious transactions of 'saumitraNode' will be omitted
+        blockchain.addNewBlock(block2);
+
+        // print blockchain
+        blockchain.printBlockchain();
+
+        // print status and transaction history of all nodes
+        blockchain.printTotalBlockchainNodeList();
+
+        // compile transaction history for block3
+        ArrayList<Transaction> transactions3 = new ArrayList<>();
+        transactions3.add(new Transaction(blockchain, "saumitra", shantanuNode.getAddress(), 40, 3));
+        transactions3.add(new Transaction(blockchain, "shubham", jayNode.getAddress(), 20, 3));
+        transactions3.add(new Transaction(blockchain, "shrihun", saumitraNode.getAddress(), 20, 3));
+        transactions3.add(new Transaction(blockchain, "saumitra", shubhamNode.getAddress(), 20, 3));
+        transactions3.add(new Transaction(blockchain, "jay", saumitraNode.getAddress(), 10, 3));
+
+        // construct block3
+        Block block3 = new Block(blockchain, false, blockchain.getBlockchain().get(0).getThisBlockHash(), transactions3, saumitraNode.getAddress());
+
+        // attempt to add block3; cannot be added due to incorrect 'prevHash' field
+        blockchain.addNewBlock(block3);
+
+        // print blockchain
+        blockchain.printBlockchain();
+
+        // print status and transaction history of all nodes
         blockchain.printTotalBlockchainNodeList();
     }
 }

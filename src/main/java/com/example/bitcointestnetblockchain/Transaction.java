@@ -77,7 +77,7 @@ public class Transaction {
     }
 
     public void printTransaction() {
-        System.out.println("This transaction, " + Base64.getEncoder().encodeToString(getTransactionHash()) + ", proposes that " + getFromUserName() + ", or " + Base64.getEncoder().encodeToString(getFromAddress()) + " sends " + getTransferAmount() + " to " + Base64.getEncoder().encodeToString(getToAddress()) + ".");
+        System.out.println("This transaction, " + Base64.getEncoder().encodeToString(getTransactionHash()) + ", proposes that " + getFromUserName() + ", or " + Base64.getEncoder().encodeToString(getFromAddress()) + " sends " + getTransferAmount() + " coins to " + Base64.getEncoder().encodeToString(getToAddress()) + ".");
     }
 
     protected void setBlockHeight(int blockHeight) {
