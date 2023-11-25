@@ -8,13 +8,15 @@ import java.util.Base64;
 public class Transaction {
 
     private String fromUserName;
+    private int blockHeight;
     private byte[] fromAddress = null;
     private final byte[] toAddress;
     private final int transferAmount;
 
     private MessageDigest digest = MessageDigest.getInstance("SHA-256");
     private final byte[] transactionHash;
-    public Transaction(String fromUserName, byte[] toAddress, int transferAmount) throws NoSuchAlgorithmException {
+    public Transaction(String fromUserName, byte[] toAddress, int transferAmount, int blockHeight) throws NoSuchAlgorithmException {
+        this.blockHeight = blockHeight;
         this.fromUserName = fromUserName;
         if (fromUserName != null) {
             this.fromAddress = digest.digest(fromUserName.getBytes(StandardCharsets.UTF_16));
@@ -45,6 +47,8 @@ public class Transaction {
             }
         }
 
+        transactionHashPreHashConcat[iterator] = (byte) this.blockHeight;
+
         this.transactionHash = digest.digest(transactionHashPreHashConcat);
     }
 
@@ -65,6 +69,10 @@ public class Transaction {
 
     public byte[] getTransactionHash() {
         return transactionHash;
+    }
+
+    public int getBlockHeight() {
+        return blockHeight;
     }
 
     public void printTransaction() {

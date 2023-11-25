@@ -70,7 +70,7 @@ public class BlockchainNode {
         this.outputTransactionList.add(transaction);
     }
 
-    public void printBlockchainNode() throws UnsupportedEncodingException {
+    public void printBlockchainNode() throws UnsupportedEncodingException, NoSuchAlgorithmException {
         System.out.println(Base64.getEncoder().encodeToString(getAddress()) + " has a balance of " + getBalance() + " coins.");
         if (!inputTransactionList.isEmpty()) {
             System.out.println("\t This node's input transactions");
@@ -93,7 +93,7 @@ public class BlockchainNode {
                 } else {
                     for (byte[] coinbaseTransactionHash: coinbaseTransactions) {
                         System.out.print("\t\t\t");
-                        System.out.println("");
+                        System.out.println(coinbaseTransactionHash + ": the network rewarded this node 100 coins for mining block " + Blockchain.getBlockByCoinbaseTransactionHash(coinbaseTransactionHash).getBlockHeight() + ".");
                     }
                 }
             }

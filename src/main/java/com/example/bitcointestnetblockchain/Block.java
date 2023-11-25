@@ -8,6 +8,7 @@ import java.util.Objects;
 public class Block {
 
     private boolean isGenesis;
+    private int blockHeight;
     private byte[] prevHash;
     private ArrayList<Transaction> transactions;
     private byte[] minerAddress;
@@ -15,6 +16,7 @@ public class Block {
     private MessageDigest digest = MessageDigest.getInstance("SHA-256");
     public Block(boolean isGenesis, byte[] prevHash, ArrayList<Transaction> transactions, byte[] minerAddress) throws NoSuchAlgorithmException {
         this.isGenesis = isGenesis;
+        this.blockHeight = Blockchain.blockchain.size();
         this.prevHash = prevHash;
         this.transactions = transactions;
         if (!Objects.equals(TotalBlockchainNodeList.getBlockchainNodeByAddress(minerAddress), null)) {
@@ -60,5 +62,9 @@ public class Block {
 
     public byte[] getThisBlockHash() {
         return this.thisBlockHash;
+    }
+
+    public int getBlockHeight() {
+        return blockHeight;
     }
 }

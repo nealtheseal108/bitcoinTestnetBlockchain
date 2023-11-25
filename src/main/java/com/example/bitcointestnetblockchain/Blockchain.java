@@ -8,18 +8,18 @@ import java.util.Base64;
 import java.util.LinkedList;
 
 public class Blockchain {
-    public LinkedList<Block> blockchain;
+    public static LinkedList<Block> blockchain;
 
     private MessageDigest digest = MessageDigest.getInstance("SHA-256");
-    private TotalBlockchainNodeList totalBlockchainNodeList;
-    private Network network;
+    private static TotalBlockchainNodeList totalBlockchainNodeList;
+    private static Network network;
     public Blockchain() throws NoSuchAlgorithmException {
         blockchain = new LinkedList<>();
         totalBlockchainNodeList = new TotalBlockchainNodeList();
         network = new Network();
     }
 
-    public boolean addNewBlock(Block block) throws NoSuchAlgorithmException {
+    public static boolean addNewBlock(Block block) throws NoSuchAlgorithmException {
         if (block.getMinerAddress() == null) {
             System.out.println("Null miner address. Needs a miner address to send coinbase transaction to.");
             return false;
@@ -28,7 +28,7 @@ public class Blockchain {
              if (block.isGenesis()) {
                 blockchain.add(block);
                 network.coinbaseTransaction(block.getMinerAddress());
-                totalBlockchainNodeList.getBlockchainNodeByAddress(block.getMinerAddress()).inputTransactionList.add(new Transaction(null, block.getMinerAddress(), 100));
+                totalBlockchainNodeList.getBlockchainNodeByAddress(block.getMinerAddress()).inputTransactionList.add(new Transaction(null, block.getMinerAddress(), 100, 0));
                 return true;
             } else {
                  return false;
@@ -36,19 +36,21 @@ public class Blockchain {
         } else if (!(Arrays.equals(block.getMinerAddress(), null)) && Arrays.equals(block.getPrevHash(), blockchain.getLast().getThisBlockHash())) {
             blockchain.add(block);
             network.coinbaseTransaction(block.getMinerAddress());
-            totalBlockchainNodeList.getBlockchainNodeByAddress(block.getMinerAddress()).inputTransactionList.add(new Transaction(null, block.getMinerAddress(), 100));
+            totalBlockchainNodeList.getBlockchainNodeByAddress(block.getMinerAddress()).inputTransactionList.add(new Transaction(null, block.getMinerAddress(), 100, blockchain.size()));
             for (int i = 0; i < block.getTransactions().size(); i++) {
                 Transaction transaction = block.getTransactions().get(i);
-                totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getToAddress()).addTransactionToInputList(transaction);
-                totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getFromAddress()).addTransactionToOutputList(transaction);
-                totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getFromAddress()).transact(transaction.getFromUserName(), transaction.getToAddress(), transaction.getTransferAmount());
+                if (transaction.getBlockHeight() == blockchain.size()) {
+                    totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getToAddress()).addTransactionToInputList(transaction);
+                    totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getFromAddress()).addTransactionToOutputList(transaction);
+                    totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getFromAddress()).transact(transaction.getFromUserName(), transaction.getToAddress(), transaction.getTransferAmount());
+                }
             }
             return true;
         }
         return false;
     }
 
-    public void printBlockchain() throws UnsupportedEncodingException {
+    public static void printBlockchain() throws UnsupportedEncodingException {
         for (int i = 0; i < blockchain.size(); i++) {
             Block block = blockchain.get(i);
             System.out.println("Block " + blockchain.indexOf(block) + "\n");
@@ -67,16 +69,31 @@ public class Blockchain {
         }
     }
 
-    public void addBlockchainNode(BlockchainNode newBlockchainNode) {
+    public static void addBlockchainNode(BlockchainNode newBlockchainNode) {
         totalBlockchainNodeList.addBlockchainNodeToList(newBlockchainNode);
     }
 
-    public void printTotalBlockchainNodeList() throws UnsupportedEncodingException {
+    public static void printTotalBlockchainNodeList() throws UnsupportedEncodingException, NoSuchAlgorithmException {
         totalBlockchainNodeList.printTotalBlockchainNodeList();
     }
 
-    public LinkedList<Block> getBlockchain() {
+    public static LinkedList<Block> getBlockchain() {
         return blockchain;
+    }
+
+    public static Block getBlockByCoinbaseTransactionHash(byte[] coinbaseTransactionHash) throws NoSuchAlgorithmException {
+        for (int i = 0; i < blockchain.size(); i++) {
+            Block block = blockchain.get(i);
+            for (int j = 0; j < block.getTransactions().size(); j++) {
+                Transaction transaction = block.getTransactions().get(j);
+                if (Arrays.equals(transaction.getFromAddress(), null)) {
+                    if (Arrays.equals(transaction.getTransactionHash(), coinbaseTransactionHash)) {
+                        return block;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
 }

@@ -53,12 +53,12 @@ public class BlockchainInterface {
 
         // Construct transactions for block 1
         ArrayList<Transaction> transactions1 = new ArrayList<>();
-        transactions1.add(new Transaction("shrihun", nealNode.getAddress(), 10));
-        transactions1.add(new Transaction("shrihun", shubhamNode.getAddress(), 10));
-        transactions1.add(new Transaction("shrihun", jayNode.getAddress(), 10));
-        transactions1.add(new Transaction("shrihun", shantanuNode.getAddress(), 10));
-        transactions1.add(new Transaction("shrihun", shyamNode.getAddress(), 10));
-        transactions1.add(new Transaction("shrihun", saumitraNode.getAddress(), 10));
+        transactions1.add(new Transaction("shrihun", nealNode.getAddress(), 10, 1));
+        transactions1.add(new Transaction("shrihun", shubhamNode.getAddress(), 10, 1));
+        transactions1.add(new Transaction("shrihun", jayNode.getAddress(), 10, 1));
+        transactions1.add(new Transaction("shrihun", shantanuNode.getAddress(), 10, 1));
+        transactions1.add(new Transaction("shrihun", shyamNode.getAddress(), 10, 1));
+        transactions1.add(new Transaction("shrihun", saumitraNode.getAddress(), 10, 1));
 
         System.out.println("\n\n");
 
