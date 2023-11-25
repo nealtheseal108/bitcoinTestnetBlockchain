@@ -20,40 +20,48 @@ public class Blockchain {
         network = new Network(this);
     }
 
-    public boolean addNewBlock(Block block) throws NoSuchAlgorithmException {
+    public boolean addNewBlock(Block block) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         if (block.getMinerAddress() == null) {
             System.out.println("Null miner address. Needs a miner address to send coinbase transaction to.");
             return false;
         }
         if (blockchain.isEmpty()) {
-             if (block.isGenesis()) {
-                 blockchain.add(block);
-                 network.coinbaseTransaction(block.getMinerAddress());
-                 Transaction coinbaseTransaction = new Transaction(this, null, block.getMinerAddress(), 100, 0);
-                 totalBlockchainNodeList.getBlockchainNodeByAddress(block.getMinerAddress()).inputTransactionList.add(coinbaseTransaction);
-                 ArrayList<Transaction> transactions = new ArrayList<>();
-                 transactions.add(coinbaseTransaction);
-                 block.setTransactions(transactions);
-                 return true;
+            if (block.isGenesis()) {
+                blockchain.add(block);
+                network.coinbaseTransaction(block.getMinerAddress());
+                Transaction coinbaseTransaction = new Transaction(this, null, block.getMinerAddress(), 100, 0);
+                totalBlockchainNodeList.getBlockchainNodeByAddress(block.getMinerAddress()).inputTransactionList.add(coinbaseTransaction);
+                ArrayList<Transaction> transactions = new ArrayList<>();
+                transactions.add(coinbaseTransaction);
+                block.setTransactions(transactions);
+                return true;
             } else {
-                 return false;
+                return false;
             }
         } else if (!(Arrays.equals(block.getMinerAddress(), null)) && (block.getBlockHeight() == getBlockchain().size()) && Arrays.equals(block.getPrevHash(), blockchain.getLast().getThisBlockHash())) {
-            blockchain.add(block);
             ArrayList<Transaction> newTransactionsList = new ArrayList<>();
-            for (int i = 0; i < block.getTransactions().size() ; i++) {
+            ArrayList<Integer> temporaryBlockchainNodeBalanceList = new ArrayList<>();
+            for (int i = 0; i < totalBlockchainNodeList.BlockchainNodeList.size(); i++) {
+                temporaryBlockchainNodeBalanceList.add(totalBlockchainNodeList.BlockchainNodeList.get(i).getBalance());
+            }
+            for (int i = 0; i < block.getTransactions().size(); i++) {
                 Transaction transaction = block.getTransactions().get(i);
+                // keep track of output of each address in system and whether they exceed sending what they own
                 transaction.setBlockHeight(blockchain.size());
-                totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getToAddress()).addTransactionToInputList(transaction);
-                totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getFromAddress()).addTransactionToOutputList(transaction);
-                totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getFromAddress()).transact(transaction.getFromUserName(), transaction.getToAddress(), transaction.getTransferAmount());
-                newTransactionsList.add(transaction);
+                temporaryBlockchainNodeBalanceList.set(totalBlockchainNodeList.BlockchainNodeList.indexOf(totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getFromAddress())), temporaryBlockchainNodeBalanceList.get(totalBlockchainNodeList.BlockchainNodeList.indexOf(totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getFromAddress()))) - -1 * transaction.getTransferAmount());
+                if (temporaryBlockchainNodeBalanceList.get(totalBlockchainNodeList.BlockchainNodeList.indexOf(totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getFromAddress()))) > 0) {
+                    totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getToAddress()).addTransactionToInputList(transaction);
+                    totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getFromAddress()).addTransactionToOutputList(transaction);
+                    totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getFromAddress()).transact(transaction.getFromUserName(), transaction.getToAddress(), transaction.getTransferAmount());
+                    newTransactionsList.add(transaction);
+                }
             }
             network.coinbaseTransaction(block.getMinerAddress());
             Transaction coinbaseTransaction = new Transaction(this, null, block.getMinerAddress(), 100, blockchain.size());
             totalBlockchainNodeList.getBlockchainNodeByAddress(block.getMinerAddress()).inputTransactionList.add(coinbaseTransaction);
             newTransactionsList.add(coinbaseTransaction);
             block.setTransactions(newTransactionsList);
+            blockchain.add(block);
             return true;
         }
         return false;

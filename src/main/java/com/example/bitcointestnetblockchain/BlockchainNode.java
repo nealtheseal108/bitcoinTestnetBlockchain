@@ -77,6 +77,7 @@ public class BlockchainNode {
         System.out.println("\t This node's input transactions");
         System.out.println("\t\tNon-coinbase transactions");
         ArrayList<byte[]> coinbaseTransactions = new ArrayList<>();
+
         for (int i = 0; i < inputTransactionList.size(); i++) {
             Transaction inputTransaction = inputTransactionList.get(i);
             if (Arrays.equals(inputTransaction.getFromAddress(), null)) {
@@ -86,6 +87,9 @@ public class BlockchainNode {
                     System.out.println("\t\t\t" +  Base64.getEncoder().encodeToString(inputTransaction.getTransactionHash()) + ": " + Base64.getEncoder().encodeToString(inputTransaction.getFromAddress()) + " sent " + inputTransaction.getTransferAmount() + " coins to this node.");
                 }
             }
+        }
+        if (coinbaseTransactions.size() == inputTransactionList.size()) {
+            System.out.println("\t\t\tNone.");
         }
         System.out.println("\t\tCoinbase transactions");
         if (coinbaseTransactions.isEmpty()) {

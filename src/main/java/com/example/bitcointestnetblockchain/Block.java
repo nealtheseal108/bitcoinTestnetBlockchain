@@ -72,4 +72,8 @@ public class Block {
     protected void setTransactions(ArrayList<Transaction> transactions) {
         this.transactions = transactions;
     }
+
+    protected void removeTransaction(Transaction transaction) {
+        this.transactions.remove(transaction);
+    }
 }
