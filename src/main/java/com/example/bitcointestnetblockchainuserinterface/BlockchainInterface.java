@@ -46,6 +46,8 @@ public class BlockchainInterface {
         // Create block 0 with "shrihun" as the block miner
         Block block0 = new Block(blockchain,true, null, null, shrihunNode.getAddress());
 
+        // hash(block number, nonce) -> value lower than target value
+
         // Add the new block to the blockchain
         blockchain.addNewBlock(block0);
 
@@ -92,7 +94,7 @@ public class BlockchainInterface {
         // print status and transaction history of all nodes
         blockchain.printTotalBlockchainNodeList();
 
-        // compile transaction history for block3
+        // compile transactions for block3
         ArrayList<Transaction> transactions3 = new ArrayList<>();
         transactions3.add(new Transaction(blockchain, "saumitra", shantanuNode.getAddress(), 40, 3));
         transactions3.add(new Transaction(blockchain, "shubham", jayNode.getAddress(), 20, 3));
