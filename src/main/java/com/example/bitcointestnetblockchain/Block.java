@@ -68,4 +68,8 @@ public class Block {
     public int getBlockHeight() {
         return blockHeight;
     }
+
+    protected void setTransactions(ArrayList<Transaction> transactions) {
+        this.transactions = transactions;
+    }
 }

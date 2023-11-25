@@ -3,6 +3,7 @@ package com.example.bitcointestnetblockchain;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.LinkedList;
@@ -26,25 +27,33 @@ public class Blockchain {
         }
         if (blockchain.isEmpty()) {
              if (block.isGenesis()) {
-                blockchain.add(block);
-                network.coinbaseTransaction(block.getMinerAddress());
-                totalBlockchainNodeList.getBlockchainNodeByAddress(block.getMinerAddress()).inputTransactionList.add(new Transaction(this, null, block.getMinerAddress(), 100, 0));
-                return true;
+                 blockchain.add(block);
+                 network.coinbaseTransaction(block.getMinerAddress());
+                 Transaction coinbaseTransaction = new Transaction(this, null, block.getMinerAddress(), 100, 0);
+                 totalBlockchainNodeList.getBlockchainNodeByAddress(block.getMinerAddress()).inputTransactionList.add(coinbaseTransaction);
+                 ArrayList<Transaction> transactions = new ArrayList<>();
+                 transactions.add(coinbaseTransaction);
+                 block.setTransactions(transactions);
+                 return true;
             } else {
                  return false;
             }
-        } else if (!(Arrays.equals(block.getMinerAddress(), null)) && Arrays.equals(block.getPrevHash(), blockchain.getLast().getThisBlockHash())) {
+        } else if (!(Arrays.equals(block.getMinerAddress(), null)) && (block.getBlockHeight() == getBlockchain().size()) && Arrays.equals(block.getPrevHash(), blockchain.getLast().getThisBlockHash())) {
             blockchain.add(block);
-            network.coinbaseTransaction(block.getMinerAddress());
-            totalBlockchainNodeList.getBlockchainNodeByAddress(block.getMinerAddress()).inputTransactionList.add(new Transaction(this, null, block.getMinerAddress(), 100, blockchain.size()));
-            for (int i = 0; i < block.getTransactions().size() - 1; i++) {
+            ArrayList<Transaction> newTransactionsList = new ArrayList<>();
+            for (int i = 0; i < block.getTransactions().size() ; i++) {
                 Transaction transaction = block.getTransactions().get(i);
-                if (transaction.getBlockHeight() == blockchain.size()) {
-                    totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getToAddress()).addTransactionToInputList(transaction);
-                    totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getFromAddress()).addTransactionToOutputList(transaction);
-                    totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getFromAddress()).transact(transaction.getFromUserName(), transaction.getToAddress(), transaction.getTransferAmount());
-                }
+                transaction.setBlockHeight(blockchain.size());
+                totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getToAddress()).addTransactionToInputList(transaction);
+                totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getFromAddress()).addTransactionToOutputList(transaction);
+                totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getFromAddress()).transact(transaction.getFromUserName(), transaction.getToAddress(), transaction.getTransferAmount());
+                newTransactionsList.add(transaction);
             }
+            network.coinbaseTransaction(block.getMinerAddress());
+            Transaction coinbaseTransaction = new Transaction(this, null, block.getMinerAddress(), 100, blockchain.size());
+            totalBlockchainNodeList.getBlockchainNodeByAddress(block.getMinerAddress()).inputTransactionList.add(coinbaseTransaction);
+            newTransactionsList.add(coinbaseTransaction);
+            block.setTransactions(newTransactionsList);
             return true;
         }
         return false;
@@ -59,7 +68,9 @@ public class Blockchain {
             }
             if (block.getTransactions() != null) {
                 for (Transaction transaction: block.getTransactions()) {
-                    System.out.print(Base64.getEncoder().encodeToString(transaction.getFromAddress()) + " sent " + transaction.getTransferAmount() + " coins to " + Base64.getEncoder().encodeToString(transaction.getToAddress()) + ". \n");
+                    if (!(Arrays.equals(transaction.getFromAddress(), null))) {
+                        System.out.print(Base64.getEncoder().encodeToString(transaction.getFromAddress()) + " sent " + transaction.getTransferAmount() + " coins to " + Base64.getEncoder().encodeToString(transaction.getToAddress()) + ". \n");
+                    }
                 }
             }
 

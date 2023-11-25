@@ -69,6 +69,6 @@ public class BlockchainInterface {
         // print the updated blockchain
         blockchain.printBlockchain();
 
-        System.out.println(shubhamNode.getBalance());
+        blockchain.printTotalBlockchainNodeList();
     }
 }
