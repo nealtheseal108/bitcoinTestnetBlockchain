@@ -8,18 +8,18 @@ import java.util.Base64;
 import java.util.LinkedList;
 
 public class Blockchain {
-    public static LinkedList<Block> blockchain;
+    public LinkedList<Block> blockchain;
 
     private MessageDigest digest = MessageDigest.getInstance("SHA-256");
-    private static TotalBlockchainNodeList totalBlockchainNodeList;
-    private static Network network;
+    protected TotalBlockchainNodeList totalBlockchainNodeList;
+    private Network network;
     public Blockchain() throws NoSuchAlgorithmException {
         blockchain = new LinkedList<>();
         totalBlockchainNodeList = new TotalBlockchainNodeList();
-        network = new Network();
+        network = new Network(this);
     }
 
-    public static boolean addNewBlock(Block block) throws NoSuchAlgorithmException {
+    public boolean addNewBlock(Block block) throws NoSuchAlgorithmException {
         if (block.getMinerAddress() == null) {
             System.out.println("Null miner address. Needs a miner address to send coinbase transaction to.");
             return false;
@@ -28,7 +28,7 @@ public class Blockchain {
              if (block.isGenesis()) {
                 blockchain.add(block);
                 network.coinbaseTransaction(block.getMinerAddress());
-                totalBlockchainNodeList.getBlockchainNodeByAddress(block.getMinerAddress()).inputTransactionList.add(new Transaction(null, block.getMinerAddress(), 100, 0));
+                totalBlockchainNodeList.getBlockchainNodeByAddress(block.getMinerAddress()).inputTransactionList.add(new Transaction(this, null, block.getMinerAddress(), 100, 0));
                 return true;
             } else {
                  return false;
@@ -36,8 +36,8 @@ public class Blockchain {
         } else if (!(Arrays.equals(block.getMinerAddress(), null)) && Arrays.equals(block.getPrevHash(), blockchain.getLast().getThisBlockHash())) {
             blockchain.add(block);
             network.coinbaseTransaction(block.getMinerAddress());
-            totalBlockchainNodeList.getBlockchainNodeByAddress(block.getMinerAddress()).inputTransactionList.add(new Transaction(null, block.getMinerAddress(), 100, blockchain.size()));
-            for (int i = 0; i < block.getTransactions().size(); i++) {
+            totalBlockchainNodeList.getBlockchainNodeByAddress(block.getMinerAddress()).inputTransactionList.add(new Transaction(this, null, block.getMinerAddress(), 100, blockchain.size()));
+            for (int i = 0; i < block.getTransactions().size() - 1; i++) {
                 Transaction transaction = block.getTransactions().get(i);
                 if (transaction.getBlockHeight() == blockchain.size()) {
                     totalBlockchainNodeList.getBlockchainNodeByAddress(transaction.getToAddress()).addTransactionToInputList(transaction);
@@ -50,7 +50,7 @@ public class Blockchain {
         return false;
     }
 
-    public static void printBlockchain() throws UnsupportedEncodingException {
+    public void printBlockchain() throws UnsupportedEncodingException {
         for (int i = 0; i < blockchain.size(); i++) {
             Block block = blockchain.get(i);
             System.out.println("Block " + blockchain.indexOf(block) + "\n");
@@ -69,19 +69,19 @@ public class Blockchain {
         }
     }
 
-    public static void addBlockchainNode(BlockchainNode newBlockchainNode) {
+    public void addBlockchainNode(BlockchainNode newBlockchainNode) {
         totalBlockchainNodeList.addBlockchainNodeToList(newBlockchainNode);
     }
 
-    public static void printTotalBlockchainNodeList() throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    public void printTotalBlockchainNodeList() throws UnsupportedEncodingException, NoSuchAlgorithmException {
         totalBlockchainNodeList.printTotalBlockchainNodeList();
     }
 
-    public static LinkedList<Block> getBlockchain() {
+    public LinkedList<Block> getBlockchain() {
         return blockchain;
     }
 
-    public static Block getBlockByCoinbaseTransactionHash(byte[] coinbaseTransactionHash) throws NoSuchAlgorithmException {
+    public Block getBlockByCoinbaseTransactionHash(byte[] coinbaseTransactionHash) throws NoSuchAlgorithmException {
         for (int i = 0; i < blockchain.size(); i++) {
             Block block = blockchain.get(i);
             for (int j = 0; j < block.getTransactions().size(); j++) {

@@ -10,6 +10,7 @@ import java.util.Base64;
 import java.util.Objects;
 
 public class BlockchainNode {
+    private Blockchain blockchain;
     private final String username;
     private final byte[] address;
     private int balance;
@@ -17,7 +18,7 @@ public class BlockchainNode {
     private ArrayList<Transaction> outputTransactionList;
     private MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
-    public BlockchainNode(String username) throws NoSuchAlgorithmException {
+    public BlockchainNode(Blockchain blockchain, String username) throws NoSuchAlgorithmException {
         this.username = username;
         this.address = digest.digest(username.getBytes(StandardCharsets.UTF_16));
         this.balance = 0;
@@ -27,19 +28,19 @@ public class BlockchainNode {
     }
 
     protected boolean transact(String username, byte[] toAddress, int sentBalance) {
-        if (this.balance < sentBalance || !(Arrays.equals(digest.digest(username.getBytes(StandardCharsets.UTF_16)), address)) || Objects.equals(TotalBlockchainNodeList.getBlockchainNodeByAddress(toAddress), null)) {
+        if (this.balance < sentBalance || !(Arrays.equals(digest.digest(username.getBytes(StandardCharsets.UTF_16)), address)) || Objects.equals(blockchain.totalBlockchainNodeList.getBlockchainNodeByAddress(toAddress), null)) {
             return false;
         }
 
-        TotalBlockchainNodeList.getBlockchainNodeByAddress(toAddress).receiveFunds(sentBalance);
+        blockchain.totalBlockchainNodeList.getBlockchainNodeByAddress(toAddress).receiveFunds(sentBalance);
         this.balance -= sentBalance;
         return true;
 
     }
 
     public boolean addToTotalBlockchainNodeList() {
-        if (Objects.equals(TotalBlockchainNodeList.getBlockchainNodeByAddress(this.address), null)) {
-            TotalBlockchainNodeList.addBlockchainNodeToList(this);
+        if (Objects.equals(blockchain.totalBlockchainNodeList.getBlockchainNodeByAddress(this.address), null)) {
+            blockchain.totalBlockchainNodeList.addBlockchainNodeToList(this);
             return true;
         }
 
@@ -93,7 +94,7 @@ public class BlockchainNode {
                 } else {
                     for (byte[] coinbaseTransactionHash: coinbaseTransactions) {
                         System.out.print("\t\t\t");
-                        System.out.println(coinbaseTransactionHash + ": the network rewarded this node 100 coins for mining block " + Blockchain.getBlockByCoinbaseTransactionHash(coinbaseTransactionHash).getBlockHeight() + ".");
+                        System.out.println(coinbaseTransactionHash + ": the network rewarded this node 100 coins for mining block " + blockchain.getBlockByCoinbaseTransactionHash(coinbaseTransactionHash).getBlockHeight() + ".");
                     }
                 }
             }

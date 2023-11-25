@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 public class Transaction {
-
+    private Blockchain blockchain;
     private String fromUserName;
     private int blockHeight;
     private byte[] fromAddress = null;
@@ -15,7 +15,8 @@ public class Transaction {
 
     private MessageDigest digest = MessageDigest.getInstance("SHA-256");
     private final byte[] transactionHash;
-    public Transaction(String fromUserName, byte[] toAddress, int transferAmount, int blockHeight) throws NoSuchAlgorithmException {
+    public Transaction(Blockchain blockchain, String fromUserName, byte[] toAddress, int transferAmount, int blockHeight) throws NoSuchAlgorithmException {
+        this.blockchain = blockchain;
         this.blockHeight = blockHeight;
         this.fromUserName = fromUserName;
         if (fromUserName != null) {

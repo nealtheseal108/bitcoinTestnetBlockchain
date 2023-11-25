@@ -7,13 +7,12 @@ import java.util.Arrays;
 import java.util.Objects;
 
 class TotalBlockchainNodeList {
-    protected static ArrayList<BlockchainNode> BlockchainNodeList;
-
+    protected ArrayList<BlockchainNode> BlockchainNodeList;
     TotalBlockchainNodeList() {
         BlockchainNodeList = new ArrayList<>();
     }
 
-    static boolean addBlockchainNodeToList(BlockchainNode newBlockchainNode) {
+    boolean addBlockchainNodeToList(BlockchainNode newBlockchainNode) {
         if ((Objects.equals(getBlockchainNodeByBlockchainNode(newBlockchainNode), null))) {
             BlockchainNodeList.add(newBlockchainNode);
             return true;
@@ -22,7 +21,7 @@ class TotalBlockchainNodeList {
         return false;
     }
 
-    public static BlockchainNode getBlockchainNodeByBlockchainNode(BlockchainNode searchedBlockchainNode) {
+    public BlockchainNode getBlockchainNodeByBlockchainNode(BlockchainNode searchedBlockchainNode) {
         int indexOfSearchedBlockchainNode = BlockchainNodeList.indexOf(searchedBlockchainNode);
         if (indexOfSearchedBlockchainNode == -1) {
             return null;
@@ -31,7 +30,7 @@ class TotalBlockchainNodeList {
         }
     }
 
-    public static BlockchainNode getBlockchainNodeByAddress(byte[] address) {
+    public BlockchainNode getBlockchainNodeByAddress(byte[] address) {
         for (int i = 0; i < BlockchainNodeList.size(); i++) {
             BlockchainNode blockchainNode = BlockchainNodeList.get(i);
             if (Arrays.equals(blockchainNode.getAddress(), address)) {
@@ -42,7 +41,7 @@ class TotalBlockchainNodeList {
         return null;
     }
 
-    public static void printTotalBlockchainNodeList() throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    public void printTotalBlockchainNodeList() throws UnsupportedEncodingException, NoSuchAlgorithmException {
         for (int i = 0; i < BlockchainNodeList.size(); i++) {
             BlockchainNode blockchainNode = BlockchainNodeList.get(i);
             blockchainNode.printBlockchainNode();

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Block {
-
+    private Blockchain blockchain;
     private boolean isGenesis;
     private int blockHeight;
     private byte[] prevHash;
@@ -14,12 +14,13 @@ public class Block {
     private byte[] minerAddress;
     private byte[] thisBlockHash;
     private MessageDigest digest = MessageDigest.getInstance("SHA-256");
-    public Block(boolean isGenesis, byte[] prevHash, ArrayList<Transaction> transactions, byte[] minerAddress) throws NoSuchAlgorithmException {
+    public Block(Blockchain blockchain, boolean isGenesis, byte[] prevHash, ArrayList<Transaction> transactions, byte[] minerAddress) throws NoSuchAlgorithmException {
+        this.blockchain = blockchain;
+        this.blockHeight = blockchain.getBlockchain().size();
         this.isGenesis = isGenesis;
-        this.blockHeight = Blockchain.blockchain.size();
         this.prevHash = prevHash;
         this.transactions = transactions;
-        if (!Objects.equals(TotalBlockchainNodeList.getBlockchainNodeByAddress(minerAddress), null)) {
+        if (!Objects.equals(blockchain.totalBlockchainNodeList.getBlockchainNodeByAddress(minerAddress), null)) {
             this.minerAddress = minerAddress;
         } else {
             this.minerAddress = null;
