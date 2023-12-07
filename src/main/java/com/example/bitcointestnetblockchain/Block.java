@@ -76,4 +76,40 @@ public class Block {
     protected void removeTransaction(Transaction transaction) {
         this.transactions.remove(transaction);
     }
+
+    public Transaction getTransactionByTransactionHashWithTreeInBlock() {
+
+    }
+
+    public Transaction getFirstTransactionFromSenderWithTreeInBlock() {
+
+    }
+
+    public Transaction getFirstTransactionToRecipientWithTreeInBlock() {
+
+    }
+
+    public Transaction getLatestTransactionFromSenderWithTreeInBlock() {
+
+    }
+
+    public Transaction getLatestTransactionToRecipientWithTreeInBlock() {
+
+    }
+
+    public BlockchainNode getSenderHistoryByTransactionHashWithTreeInBlock() {
+
+    }
+
+    public BlockchainNode getSenderHistoryByAddressWithTreeInBlockInBlock() {
+
+    }
+
+    public BlockchainNode getRecipientHistoryTransactionHashWithTreeInBlock() {
+
+    }
+
+    public BlockchainNode getRecipientHistoryByAddressWithTreeInBlock() {
+
+    }
 }

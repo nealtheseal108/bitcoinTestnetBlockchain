@@ -115,10 +115,19 @@ public class Blockchain {
         return null;
     }
 
-    /*
-
     public Block getBlockByBlockHashWithTree() {
 
+    }
+
+    public ArrayList<Block> getBlocksWithTransactionAddressWithTree() {
+
+    }
+
+    public ArrayList<Block> getBlocksWithSenderAddressWithTree() {
+
+    }
+
+    public ArrayList<Block> getBlocksWithRecipientAddressWithTree() {
 
     }
 
@@ -129,7 +138,5 @@ public class Blockchain {
     public Block getBlockByCoinbaseTransactionHashWithTree() {
 
     }
-
-    */
 
 }

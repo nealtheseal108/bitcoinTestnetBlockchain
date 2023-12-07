@@ -15,4 +15,5 @@ class Network {
         blockchain.totalBlockchainNodeList.getBlockchainNodeByAddress(minerAddress).receiveFunds(100);
         totalSupply -= 100;
     }
+
 }
