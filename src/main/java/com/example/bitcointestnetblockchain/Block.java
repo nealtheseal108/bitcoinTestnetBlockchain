@@ -11,6 +11,7 @@ public class Block {
     private int blockHeight;
     private byte[] prevHash;
     private ArrayList<Transaction> transactions;
+    private BinarySearchTree transactionSearchTree;
     private byte[] minerAddress;
     private byte[] thisBlockHash;
     private MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -112,4 +113,6 @@ public class Block {
     public BlockchainNode getRecipientHistoryByAddressWithTreeInBlock() {
 
     }
+
+    public BlockchainNode getNodeByAddress
 }
