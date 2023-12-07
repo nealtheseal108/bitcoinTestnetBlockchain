@@ -29,7 +29,7 @@ public class BlockchainNode {
     }
 
     protected boolean transact(String username, byte[] toAddress, int sentBalance) {
-        if (this.balance < sentBalance || !(Arrays.equals(digest.digest(username.getBytes(StandardCharsets.UTF_16)), address)) || Objects.equals(blockchain.totalBlockchainNodeList.getBlockchainNodeByAddress(toAddress), null)) {
+        if (Objects.equals(this.address, toAddress) || this.balance < sentBalance || !(Arrays.equals(digest.digest(username.getBytes(StandardCharsets.UTF_16)), address)) || Objects.equals(blockchain.totalBlockchainNodeList.getBlockchainNodeByAddress(toAddress), null)) {
             return false;
         }
 
@@ -117,4 +117,37 @@ public class BlockchainNode {
         System.out.println();
 
     }
+
+    public Transaction getTransactionByTransactionHashWithTree() {
+
+    }
+
+    public Transaction getFirstTransactionFromSenderWithTree() {
+
+    }
+
+    public Transaction getFirstTransactionFromSenderWithTree() {
+
+    }
+
+    public Transaction getLatestTransactionToRecipientWithTree() {
+
+    }
+
+    public BlockchainNode getSenderHistoryByAddressWithTree() {
+
+    }
+
+    public BlockchainNode getSenderHistoryByTransactionHashWithTree() {
+
+    }
+
+    public BlockchainNode getRecipientHistoryTransactionHashWithTree() {
+
+    }
+
+    public BlockchainNode getRecipientHistoryByAddressWithTree() {
+
+    }
+
 }

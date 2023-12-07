@@ -115,4 +115,21 @@ public class Blockchain {
         return null;
     }
 
+    /*
+
+    public Block getBlockByBlockHashWithTree() {
+
+
+    }
+
+    public Block getBlockByCoinbaseTransactionHashWithTree() {
+
+    }
+
+    public Block getBlockByCoinbaseTransactionHashWithTree() {
+
+    }
+
+    */
+
 }

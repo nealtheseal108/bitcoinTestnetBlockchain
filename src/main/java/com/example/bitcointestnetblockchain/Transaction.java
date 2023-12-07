@@ -56,6 +56,7 @@ public class Transaction {
     protected String getFromUserName() {
         return fromUserName;
     }
+
     public byte[] getFromAddress() {
         return fromAddress;
     }
