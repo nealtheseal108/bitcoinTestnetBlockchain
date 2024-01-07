@@ -19,7 +19,7 @@ public class Blockchain {
     public Blockchain(int totalSupply, int blockSubsidy) throws NoSuchAlgorithmException {
         blockchain = new LinkedList<>();
         totalBlockchainNodeList = new TotalBlockchainNodeList();
-        network = new Network(this);
+        network = new Network(this, totalSupply, blockSubsidy);
     }
 
     public boolean addNewBlock(Block block) throws NoSuchAlgorithmException, UnsupportedEncodingException {
@@ -115,30 +115,6 @@ public class Blockchain {
             }
         }
         return null;
-    }
-
-    public Block getBlockByBlockHashWithTree() {
-
-    }
-
-    public ArrayList<Block> getBlocksWithTransactionAddressWithTree() {
-
-    }
-
-    public ArrayList<Block> getBlocksWithSenderAddressWithTree() {
-
-    }
-
-    public ArrayList<Block> getBlocksWithRecipientAddressWithTree() {
-
-    }
-
-    public Block getBlockByCoinbaseTransactionHashWithTree() {
-
-    }
-
-    public Block getBlockByCoinbaseTransactionHashWithTree() {
-
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.bitcointestnetblockchain;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class TransactionBinarySearchTree {
     protected ArrayList<TransactionBinarySearchTreeNode> unsortedArrayList;
@@ -31,6 +32,20 @@ public class TransactionBinarySearchTree {
             sum += i;
         }
         return sum;
+    }
+
+    public TransactionBinarySearchTreeNode findTransactionInTree(TransactionBinarySearchTreeNode rootNode, TransactionBinarySearchTreeNode blockchainNode) {
+        if (Objects.equals(rootNode, blockchainNode)) {
+            return rootNode;
+        } else if (calculateTransactionHashWithByteArray(blockchainNode.getRootTransaction().getTransactionHash()) < calculateTransactionHashWithByteArray(rootNode.getRootTransaction().getTransactionHash())) {
+            findTransactionInTree(rootNode.getLeftTransactionBinarySearchTreeNode(), blockchainNode);
+        } else if (calculateTransactionHashWithByteArray(blockchainNode.getRootTransaction().getTransactionHash()) > calculateTransactionHashWithByteArray(rootNode.getRootTransaction().getTransactionHash())) {
+            findTransactionInTree(rootNode.getRightTransactionBinarySearchTreeNode(), blockchainNode);
+        }
+        else if (rootNode == null) {
+            return null;
+        }
+        return null;
     }
 
 }

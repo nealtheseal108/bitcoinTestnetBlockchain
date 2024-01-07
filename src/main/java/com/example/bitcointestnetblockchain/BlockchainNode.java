@@ -30,6 +30,7 @@ public class BlockchainNode {
 
     public BlockchainNode(Blockchain blockchain, byte[] address) throws NoSuchAlgorithmException {
         this.blockchain = blockchain;
+        this.username = null;
         this.address = address;
         this.balance = 0;
         inputTransactionList = new ArrayList<>();
@@ -126,37 +127,4 @@ public class BlockchainNode {
         System.out.println();
 
     }
-
-    public Transaction getTransactionByTransactionHashWithTree() {
-
-    }
-
-    public Transaction getFirstTransactionFromSenderWithTree() {
-
-    }
-
-    public Transaction getFirstTransactionFromSenderWithTree() {
-
-    }
-
-    public Transaction getLatestTransactionToRecipientWithTree() {
-
-    }
-
-    public BlockchainNode getSenderHistoryByAddressWithTree() {
-
-    }
-
-    public BlockchainNode getSenderHistoryByTransactionHashWithTree() {
-
-    }
-
-    public BlockchainNode getRecipientHistoryTransactionHashWithTree() {
-
-    }
-
-    public BlockchainNode getRecipientHistoryByAddressWithTree() {
-
-    }
-
 }

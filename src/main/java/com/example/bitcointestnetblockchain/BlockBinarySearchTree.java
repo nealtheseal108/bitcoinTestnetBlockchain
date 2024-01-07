@@ -34,13 +34,13 @@ public class BlockBinarySearchTree {
         return sum;
     }
 
-    protected BlockchainNodeBinarySearchTreeNode findBlockchainNodeInBlock(BlockchainNodeBinarySearchTreeNode rootNode, BlockchainNodeBinarySearchTreeNode blockchainNode) {
-        if (Objects.equals(rootNode, blockchainNode)) {
+    public BlockBinarySearchTreeNode findBlockInTree(BlockBinarySearchTreeNode rootNode, BlockBinarySearchTreeNode blockNode) {
+        if (Objects.equals(rootNode, blockNode)) {
             return rootNode;
-        } else if (calculateBlockHashWithByteArray(blockchainNode.getRootBlockchainNode().getAddress()) < calculateBlockHashWithByteArray(rootNode.getRootBlockchainNode().getAddress())) {
-            findBlockchainNodeInBlock(rootNode.getLeftBlockchainNodeBinarySearchTreeNode(), blockchainNode);
-        } else if (calculateBlockHashWithByteArray(blockchainNode.getRootBlockchainNode().getAddress()) > calculateBlockHashWithByteArray(rootNode.getRootBlockchainNode().getAddress()))
-            findBlockchainNodeInBlock(rootNode.getRightBlockchainNodeBinarySearchTreeNode(), blockchainNode);
+        } else if (calculateBlockHashWithByteArray(blockNode.getRootBlock().getThisBlockHash()) < calculateBlockHashWithByteArray(rootNode.getRootBlock().getThisBlockHash())) {
+            findBlockInTree(rootNode.getLeftBlockBinarySearchTreeNode(), blockNode);
+        } else if (calculateBlockHashWithByteArray(blockNode.getRootBlock().getThisBlockHash()) > calculateBlockHashWithByteArray(rootNode.getRootBlock().getThisBlockHash()))
+            findBlockInTree(rootNode.getRightBlockBinarySearchTreeNode(), blockNode);
         else if (rootNode == null) {
             return null;
         }
