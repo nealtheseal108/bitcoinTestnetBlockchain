@@ -15,7 +15,7 @@ public class BlockchainInterface {
     public static void main(String[] args) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         // Initialize SHA-256 hash algorithm
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        Blockchain blockchain = new Blockchain();
+        Blockchain blockchain = new Blockchain(21000000, 100);
 
         // the BlockchainNode "shrihun" is the miner of the first block
         BlockchainNode shrihunNode = new BlockchainNode(blockchain, "shrihun");

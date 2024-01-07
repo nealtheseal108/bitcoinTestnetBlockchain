@@ -14,7 +14,9 @@ public class Blockchain {
     private MessageDigest digest = MessageDigest.getInstance("SHA-256");
     protected TotalBlockchainNodeList totalBlockchainNodeList;
     private Network network;
-    public Blockchain() throws NoSuchAlgorithmException {
+    private int totalSupply;
+    private int blockSubsidy;
+    public Blockchain(int totalSupply, int blockSubsidy) throws NoSuchAlgorithmException {
         blockchain = new LinkedList<>();
         totalBlockchainNodeList = new TotalBlockchainNodeList();
         network = new Network(this);

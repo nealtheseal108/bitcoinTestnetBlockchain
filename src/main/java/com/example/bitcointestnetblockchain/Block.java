@@ -1,8 +1,10 @@
 package com.example.bitcointestnetblockchain;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class Block {
@@ -11,7 +13,10 @@ public class Block {
     private int blockHeight;
     private byte[] prevHash;
     private ArrayList<Transaction> transactions;
-    private BinarySearchTree transactionSearchTree;
+    private TransactionBinarySearchTree transactionSearchTree;
+    private ArrayList<BlockchainNode> blockchainNodes;
+    private BlockchainNodeBinarySearchTree blockchainNodeSearchTree;
+
     private byte[] minerAddress;
     private byte[] thisBlockHash;
     private MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -21,6 +26,7 @@ public class Block {
         this.isGenesis = isGenesis;
         this.prevHash = prevHash;
         this.transactions = transactions;
+        this.blockchainNodes = blockchainNodes;
         if (!Objects.equals(blockchain.totalBlockchainNodeList.getBlockchainNodeByAddress(minerAddress), null)) {
             this.minerAddress = minerAddress;
         } else {
@@ -31,6 +37,18 @@ public class Block {
         if (!(Objects.equals(transactions, null))) {
             for (int i = 0; i < transactions.size(); i++) {
                 Transaction transaction = transactions.get(i);
+                if (!(blockchainNodes.contains(new BlockchainNode(this.blockchain, transaction.getFromUserName())) || blockchainNodes.contains(new BlockchainNode(this.blockchain, digest.digest(transaction.getFromUserName().getBytes(StandardCharsets.UTF_16)))))) {
+                    blockchainNodes.add(new BlockchainNode(this.blockchain, transaction.getFromUserName()));
+                }
+                boolean isToNodePresent = false;
+                for (BlockchainNode currentNode: blockchainNodes) {
+                    if (Arrays.equals(currentNode.getAddress(), transaction.getToAddress())) {
+                        isToNodePresent = true;
+                    }
+                }
+                if (!isToNodePresent) {
+                    blockchainNodes.add(new BlockchainNode(this.blockchain, transaction.getToAddress()));
+                }
                 for (int j = 0; j < transaction.getTransactionHash().length; j++) {
                     byte b = transaction.getTransactionHash()[j];
                     blockHashPreHashConcat[iterator] = b;
@@ -44,6 +62,18 @@ public class Block {
             iterator++;
         }
         this.thisBlockHash = digest.digest(blockHashPreHashConcat);
+
+        ArrayList<TransactionBinarySearchTreeNode> transactionsSearchTreeInputArrayList = new ArrayList<TransactionBinarySearchTreeNode>();
+        for (Transaction transaction: transactions) {
+            transactionsSearchTreeInputArrayList.add(new TransactionBinarySearchTreeNode(transaction, null, null));
+        }
+        transactionSearchTree = new TransactionBinarySearchTree(transactionsSearchTreeInputArrayList);
+
+        ArrayList<BlockchainNodeBinarySearchTreeNode> blockchainNodeBinarySearchTreeInputArrayList = new ArrayList<BlockchainNodeBinarySearchTreeNode>();
+        for (BlockchainNode currentNode: blockchainNodes) {
+            blockchainNodeBinarySearchTreeInputArrayList.add(new BlockchainNodeBinarySearchTreeNode(currentNode, null, null));
+        }
+        blockchainNodeSearchTree = new BlockchainNodeBinarySearchTree(blockchainNodeBinarySearchTreeInputArrayList);
     }
 
     public boolean isGenesis() {
@@ -78,41 +108,11 @@ public class Block {
         this.transactions.remove(transaction);
     }
 
-    public Transaction getTransactionByTransactionHashWithTreeInBlock() {
-
+    public TransactionBinarySearchTree getTransactionBinarySearchTree() {
+        return transactionSearchTree;
     }
 
-    public Transaction getFirstTransactionFromSenderWithTreeInBlock() {
-
+    public BlockchainNodeBinarySearchTree getBlockchainNodeBinarySearchTree() {
+        return blockchainNodeSearchTree;
     }
-
-    public Transaction getFirstTransactionToRecipientWithTreeInBlock() {
-
-    }
-
-    public Transaction getLatestTransactionFromSenderWithTreeInBlock() {
-
-    }
-
-    public Transaction getLatestTransactionToRecipientWithTreeInBlock() {
-
-    }
-
-    public BlockchainNode getSenderHistoryByTransactionHashWithTreeInBlock() {
-
-    }
-
-    public BlockchainNode getSenderHistoryByAddressWithTreeInBlockInBlock() {
-
-    }
-
-    public BlockchainNode getRecipientHistoryTransactionHashWithTreeInBlock() {
-
-    }
-
-    public BlockchainNode getRecipientHistoryByAddressWithTreeInBlock() {
-
-    }
-
-    public BlockchainNode getNodeByAddress
 }

@@ -28,6 +28,15 @@ public class BlockchainNode {
         addToTotalBlockchainNodeList();
     }
 
+    public BlockchainNode(Blockchain blockchain, byte[] address) throws NoSuchAlgorithmException {
+        this.blockchain = blockchain;
+        this.address = address;
+        this.balance = 0;
+        inputTransactionList = new ArrayList<>();
+        outputTransactionList = new ArrayList<>();
+        addToTotalBlockchainNodeList();
+    }
+
     protected boolean transact(String username, byte[] toAddress, int sentBalance) {
         if (Objects.equals(this.address, toAddress) || this.balance < sentBalance || !(Arrays.equals(digest.digest(username.getBytes(StandardCharsets.UTF_16)), address)) || Objects.equals(blockchain.totalBlockchainNodeList.getBlockchainNodeByAddress(toAddress), null)) {
             return false;

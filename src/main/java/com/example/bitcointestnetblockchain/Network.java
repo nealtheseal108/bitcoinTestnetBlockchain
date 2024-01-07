@@ -12,8 +12,8 @@ class Network {
     }
 
     protected void coinbaseTransaction(byte[] minerAddress) {
-        blockchain.totalBlockchainNodeList.getBlockchainNodeByAddress(minerAddress).receiveFunds(100);
-        totalSupply -= 100;
+        blockchain.totalBlockchainNodeList.getBlockchainNodeByAddress(minerAddress).receiveFunds(blockSubsidy);
+        totalSupply -= blockSubsidy;
     }
 
 }
