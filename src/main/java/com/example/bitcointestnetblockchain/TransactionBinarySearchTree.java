@@ -55,9 +55,9 @@ public class TransactionBinarySearchTree {
         if (Objects.equals(rootNode.getRootTransaction(), transaction)) {
             return transaction;
         } else if (calculateTransactionHashWithByteArray(transaction.getTransactionHash()) < calculateTransactionHashWithByteArray(rootNode.getRootTransaction().getTransactionHash())) {
-            findTransactionInTree(rootNode.getLeftTransactionBinarySearchTreeNode(), transaction);
+            return findTransactionInTree(rootNode.getLeftTransactionBinarySearchTreeNode(), transaction);
         } else if (calculateTransactionHashWithByteArray(transaction.getTransactionHash()) > calculateTransactionHashWithByteArray(rootNode.getRootTransaction().getTransactionHash()))
-            findTransactionInTree(rootNode.getRightTransactionBinarySearchTreeNode(), transaction);
+            return findTransactionInTree(rootNode.getRightTransactionBinarySearchTreeNode(), transaction);
         else if (rootNode == null) {
             return null;
         }

@@ -54,9 +54,9 @@ public class BlockchainNodeBinarySearchTree {
         if (Objects.equals(rootNode.getRootBlockchainNode(), blockchainNode)) {
             return blockchainNode;
         } else if (calculateBlockchainNodeAddressWithByteArray(blockchainNode.getAddress()) < calculateBlockchainNodeAddressWithByteArray(rootNode.getRootBlockchainNode().getAddress())) {
-            findBlockchainNodeInTree(rootNode.getLeftBlockchainNodeBinarySearchTreeNode(), blockchainNode);
+            return findBlockchainNodeInTree(rootNode.getLeftBlockchainNodeBinarySearchTreeNode(), blockchainNode);
         } else if (calculateBlockchainNodeAddressWithByteArray(blockchainNode.getAddress()) > calculateBlockchainNodeAddressWithByteArray(rootNode.getRootBlockchainNode().getAddress()))
-            findBlockchainNodeInTree(rootNode.getRightBlockchainNodeBinarySearchTreeNode(), blockchainNode);
+            return findBlockchainNodeInTree(rootNode.getRightBlockchainNodeBinarySearchTreeNode(), blockchainNode);
         else if (rootNode == null) {
             return null;
         }

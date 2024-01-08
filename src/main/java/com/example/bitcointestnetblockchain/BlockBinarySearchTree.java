@@ -55,9 +55,9 @@ public class BlockBinarySearchTree {
         if (Objects.equals(rootNode.getRootBlock(), block)) {
             return block;
         } else if (calculateBlockHashWithByteArray(block.getThisBlockHash()) < calculateBlockHashWithByteArray(rootNode.getRootBlock().getThisBlockHash())) {
-            findBlockInTree(rootNode.getLeftBlockBinarySearchTreeNode(), block);
+            return findBlockInTree(rootNode.getLeftBlockBinarySearchTreeNode(), block);
         } else if (calculateBlockHashWithByteArray(block.getThisBlockHash()) > calculateBlockHashWithByteArray(rootNode.getRootBlock().getThisBlockHash()))
-            findBlockInTree(rootNode.getRightBlockBinarySearchTreeNode(), block);
+            return findBlockInTree(rootNode.getRightBlockBinarySearchTreeNode(), block);
         else if (rootNode == null) {
             return null;
         }
