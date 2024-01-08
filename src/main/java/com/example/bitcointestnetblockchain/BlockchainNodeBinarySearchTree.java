@@ -9,8 +9,10 @@ public class BlockchainNodeBinarySearchTree {
 
     protected BlockchainNodeBinarySearchTree (ArrayList<BlockchainNode> unsortedArrayList) {
         this.unsortedArrayList = unsortedArrayList;
-        rootNode = new BlockchainNodeBinarySearchTreeNode(unsortedArrayList.get(0), null, null);
-        binaryTreeFromArrayList(rootNode, unsortedArrayList);
+        if (unsortedArrayList != null) {
+            rootNode = new BlockchainNodeBinarySearchTreeNode(unsortedArrayList.get(0), null, null);
+            binaryTreeFromArrayList(rootNode, unsortedArrayList);
+        }
     }
 
     private void binaryTreeFromArrayList(BlockchainNodeBinarySearchTreeNode node, ArrayList<BlockchainNode> unsortedArrayList)  {
@@ -51,16 +53,20 @@ public class BlockchainNodeBinarySearchTree {
     }
 
     public BlockchainNode findBlockchainNodeInTree(BlockchainNodeBinarySearchTreeNode rootNode, BlockchainNode blockchainNode) {
-        if (Objects.equals(rootNode.getRootBlockchainNode(), blockchainNode)) {
-            return blockchainNode;
-        } else if (calculateBlockchainNodeAddressWithByteArray(blockchainNode.getAddress()) < calculateBlockchainNodeAddressWithByteArray(rootNode.getRootBlockchainNode().getAddress())) {
-            return findBlockchainNodeInTree(rootNode.getLeftBlockchainNodeBinarySearchTreeNode(), blockchainNode);
-        } else if (calculateBlockchainNodeAddressWithByteArray(blockchainNode.getAddress()) > calculateBlockchainNodeAddressWithByteArray(rootNode.getRootBlockchainNode().getAddress()))
-            return findBlockchainNodeInTree(rootNode.getRightBlockchainNodeBinarySearchTreeNode(), blockchainNode);
-        else if (rootNode == null) {
+        if (rootNode != null) {
+            if (Objects.equals(rootNode.getRootBlockchainNode(), blockchainNode)) {
+                return blockchainNode;
+            } else if (calculateBlockchainNodeAddressWithByteArray(blockchainNode.getAddress()) < calculateBlockchainNodeAddressWithByteArray(rootNode.getRootBlockchainNode().getAddress())) {
+                return findBlockchainNodeInTree(rootNode.getLeftBlockchainNodeBinarySearchTreeNode(), blockchainNode);
+            } else if (calculateBlockchainNodeAddressWithByteArray(blockchainNode.getAddress()) > calculateBlockchainNodeAddressWithByteArray(rootNode.getRootBlockchainNode().getAddress()))
+                return findBlockchainNodeInTree(rootNode.getRightBlockchainNodeBinarySearchTreeNode(), blockchainNode);
+            else if (rootNode == null) {
+                return null;
+            }
             return null;
         }
         return null;
+
     }
 
 }

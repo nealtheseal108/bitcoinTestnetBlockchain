@@ -26,7 +26,6 @@ public class Block {
         this.isGenesis = isGenesis;
         this.prevHash = prevHash;
         this.transactions = transactions;
-        this.blockchainNodes = blockchainNodes;
         if (!Objects.equals(blockchain.totalBlockchainNodeList.getBlockchainNodeByAddress(minerAddress), null)) {
             this.minerAddress = minerAddress;
         } else {
@@ -35,13 +34,19 @@ public class Block {
         byte[] blockHashPreHashConcat = new byte[2048];
         int iterator = 0;
         if (!(Objects.equals(transactions, null))) {
-            for (int i = 0; i < transactions.size(); i++) {
-                Transaction transaction = transactions.get(i);
-                if (!(blockchainNodes.contains(new BlockchainNode(this.blockchain, transaction.getFromUserName())) || blockchainNodes.contains(new BlockchainNode(this.blockchain, digest.digest(transaction.getFromUserName().getBytes(StandardCharsets.UTF_16)))))) {
-                    blockchainNodes.add(new BlockchainNode(this.blockchain, transaction.getFromUserName()));
+            for (Transaction transaction : transactions) {
+                if (blockchainNodes == null) {
+                    blockchainNodes = new ArrayList<>();
+                    blockchainNodes.add(new BlockchainNode(blockchain, "filler"));
                 }
+                if (transaction.getFromUserName() != null) {
+                    if (!(blockchainNodes.contains(new BlockchainNode(this.blockchain, transaction.getFromUserName())) || blockchainNodes.contains(new BlockchainNode(this.blockchain, digest.digest(transaction.getFromUserName().getBytes(StandardCharsets.UTF_16)))))) {
+                        blockchainNodes.add(new BlockchainNode(this.blockchain, transaction.getFromUserName()));
+                    }
+                }
+                blockchainNodes.remove(0);
                 boolean isToNodePresent = false;
-                for (BlockchainNode currentNode: blockchainNodes) {
+                for (BlockchainNode currentNode : blockchainNodes) {
                     if (Arrays.equals(currentNode.getAddress(), transaction.getToAddress())) {
                         isToNodePresent = true;
                     }
@@ -57,8 +62,8 @@ public class Block {
             }
         }
 
-        for (int i = 0; i < minerAddress.length; i++) {
-            blockHashPreHashConcat[iterator] = minerAddress[i];
+        for (byte address: minerAddress) {
+            blockHashPreHashConcat[iterator] = address;
             iterator++;
         }
         this.thisBlockHash = digest.digest(blockHashPreHashConcat);
@@ -114,7 +119,10 @@ public class Block {
             arrayListOfTransactions.add(currentTransaction);
         }
         TransactionBinarySearchTree transactionBinarySearchTree = new TransactionBinarySearchTree(arrayListOfTransactions);
-        return transactionBinarySearchTree.findTransactionInTree(transactionBinarySearchTree.rootNode, transaction);
+        if (transactionBinarySearchTree.rootNode != null) {
+            return transactionBinarySearchTree.findTransactionInTree(transactionBinarySearchTree.rootNode, transaction);
+        }
+        return null;
     }
 
     public BlockchainNode getBlockchainNodeWithTree(BlockchainNode blockchainNode) {
@@ -123,6 +131,9 @@ public class Block {
             arrayListOfBlockchainNodes.add(currentBlockchainNode);
         }
         BlockchainNodeBinarySearchTree blockchainNodeBinarySearchTree = new BlockchainNodeBinarySearchTree(arrayListOfBlockchainNodes);
-        return blockchainNodeBinarySearchTree.findBlockchainNodeInTree(blockchainNodeBinarySearchTree.rootNode, blockchainNode);
+        if (!Objects.equals(blockchainNodeBinarySearchTree.rootNode, null)) {
+            return blockchainNodeBinarySearchTree.findBlockchainNodeInTree(blockchainNodeBinarySearchTree.rootNode, blockchainNode);
+        }
+        return null;
     }
 }

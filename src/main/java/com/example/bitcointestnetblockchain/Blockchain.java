@@ -3,10 +3,7 @@ package com.example.bitcointestnetblockchain;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.LinkedList;
+import java.util.*;
 
 public class Blockchain {
     public LinkedList<Block> blockchain;
@@ -73,10 +70,10 @@ public class Blockchain {
         for (int i = 0; i < blockchain.size(); i++) {
             Block block = blockchain.get(i);
             System.out.println("Block " + blockchain.indexOf(block) + "\n");
-            if (block.getPrevHash() != null && !block.isGenesis()) {
+            if (!(Arrays.equals(block.getPrevHash(), null)) && !block.isGenesis()) {
                 System.out.println("Previous block hash: " + Base64.getEncoder().encodeToString(block.getPrevHash()) + ".");
             }
-            if (block.getTransactions() != null) {
+            if (!Objects.equals(block.getTransactions(), null)) {
                 for (Transaction transaction: block.getTransactions()) {
                     if (!(Arrays.equals(transaction.getFromAddress(), null))) {
                         System.out.print(Base64.getEncoder().encodeToString(transaction.getFromAddress()) + " sent " + transaction.getTransferAmount() + " coins to " + Base64.getEncoder().encodeToString(transaction.getToAddress()) + ". \n");
@@ -123,7 +120,10 @@ public class Blockchain {
             arrayListOfBlocks.add(currentBlock);
         }
         BlockBinarySearchTree blockBinarySearchTree = new BlockBinarySearchTree(arrayListOfBlocks);
-        return blockBinarySearchTree.findBlockInTree(blockBinarySearchTree.rootNode, block);
+        if (!Objects.equals(blockBinarySearchTree.rootNode, null)) {
+            return blockBinarySearchTree.findBlockInTree(blockBinarySearchTree.rootNode, block);
+        }
+        return null;
     }
 
     public BlockchainNode getBlockchainNodeWithTree(BlockchainNode blockchainNode) {
@@ -132,7 +132,10 @@ public class Blockchain {
             arrayListOfBlockchainNodes.add(currentBlockchainNode);
         }
         BlockchainNodeBinarySearchTree blockchainNodeBinarySearchTree = new BlockchainNodeBinarySearchTree(arrayListOfBlockchainNodes);
-        return blockchainNodeBinarySearchTree.findBlockchainNodeInTree(blockchainNodeBinarySearchTree.rootNode, blockchainNode);
+        if (!Objects.equals(blockchainNodeBinarySearchTree.rootNode, null)) {
+            return blockchainNodeBinarySearchTree.findBlockchainNodeInTree(blockchainNodeBinarySearchTree.rootNode, blockchainNode);
+        }
+        return null;
     }
 
 }

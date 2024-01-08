@@ -96,11 +96,16 @@ public class BlockchainInterface {
 
         // compile transactions for block3
         ArrayList<Transaction> transactions3 = new ArrayList<>();
-        transactions3.add(new Transaction(blockchain, "saumitra", shantanuNode.getAddress(), 40, 3));
-        transactions3.add(new Transaction(blockchain, "shubham", jayNode.getAddress(), 20, 3));
-        transactions3.add(new Transaction(blockchain, "shrihun", saumitraNode.getAddress(), 20, 3));
-        transactions3.add(new Transaction(blockchain, "saumitra", shubhamNode.getAddress(), 20, 3));
-        transactions3.add(new Transaction(blockchain, "jay", saumitraNode.getAddress(), 10, 3));
+        Transaction block3transaction0 = new Transaction(blockchain, "saumitra", shantanuNode.getAddress(), 40, 3);
+        transactions3.add(block3transaction0);
+        Transaction block3transaction1 = new Transaction(blockchain, "shubham", jayNode.getAddress(), 20, 3);
+        transactions3.add(block3transaction1);
+        Transaction block3transaction2 = new Transaction(blockchain, "shrihun", saumitraNode.getAddress(), 20, 3);
+        transactions3.add(block3transaction2);
+        Transaction block3transaction3 = new Transaction(blockchain, "saumitra", shubhamNode.getAddress(), 20, 3);
+        transactions3.add(block3transaction3);
+        Transaction block3transaction4 = new Transaction(blockchain, "jay", saumitraNode.getAddress(), 10, 3);
+        transactions3.add(block3transaction4);
 
         // construct block3
         Block block3 = new Block(blockchain, false, blockchain.getBlockchain().get(0).getThisBlockHash(), transactions3, saumitraNode.getAddress());
@@ -114,6 +119,24 @@ public class BlockchainInterface {
         // print status and transaction history of all nodes
         blockchain.printTotalBlockchainNodeList();
 
+        // attempt to retrieve one blockchain nodes that has interacted with the blockchain
+        /* should return */ System.out.println(blockchain.getBlockchainNodeWithTree(saumitraNode));
+        BlockchainNode neelNode = new BlockchainNode(blockchain, "neel");
+        /* should return */ System.out.println(blockchain.getBlockchainNodeWithTree(neelNode));
+
+        // attempt to retrieve three blocks, two of which are present in the blockchain and one of which is not
+        /* should return */ System.out.println((blockchain.getBlockWithTree(block0)));
+        /* should be null */ System.out.println(blockchain.getBlockWithTree(new Block(blockchain, false, block1.getPrevHash(), block1.getTransactions(), block1.getMinerAddress())));
+        /* should be null */ System.out.println((blockchain.getBlockWithTree(new Block(blockchain, false, block2.getPrevHash(), block3.getTransactions(), block1.getMinerAddress()))));
+
+        // attempt to retrieve two blockchain nodes in 'block3', both of which are not present in the block
+        /* should be null */ System.out.println(block3.getBlockchainNodeWithTree(neelNode));
+        /* should be null */ System.out.println(block3.getBlockchainNodeWithTree(nealNode));
+
+        // attempt to retrieve three transactions in 'block3', two of which are present in the block and one of which is not
+        /* should return */ System.out.println(block3.getTransactionWithTree(block3transaction0));
+        /* should return */ System.out.println(block3.getTransactionWithTree(block3transaction2));
+        /* should be null */ System.out.println(block3.getTransactionWithTree(new Transaction(blockchain, "neal", shantanuNode.getAddress(), 10, 3)));
 
     }
 }

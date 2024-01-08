@@ -9,9 +9,10 @@ public class BlockBinarySearchTree {
 
     protected BlockBinarySearchTree (ArrayList<Block> unsortedArrayList) {
         this.unsortedArrayList = unsortedArrayList;
-        rootNode = new BlockBinarySearchTreeNode(unsortedArrayList.get(0), null, null);
-        unsortedArrayList.remove(0);
-        binaryTreeFromArrayList(rootNode, unsortedArrayList);
+        if (unsortedArrayList != null) {
+            rootNode = new BlockBinarySearchTreeNode(unsortedArrayList.get(0), null, null);
+            binaryTreeFromArrayList(rootNode, unsortedArrayList);
+        }
     }
 
     private void binaryTreeFromArrayList(BlockBinarySearchTreeNode node, ArrayList<Block> unsortedArrayList)  {
@@ -52,13 +53,16 @@ public class BlockBinarySearchTree {
     }
 
     public Block findBlockInTree(BlockBinarySearchTreeNode rootNode, Block block) {
-        if (Objects.equals(rootNode.getRootBlock(), block)) {
-            return block;
-        } else if (calculateBlockHashWithByteArray(block.getThisBlockHash()) < calculateBlockHashWithByteArray(rootNode.getRootBlock().getThisBlockHash())) {
-            return findBlockInTree(rootNode.getLeftBlockBinarySearchTreeNode(), block);
-        } else if (calculateBlockHashWithByteArray(block.getThisBlockHash()) > calculateBlockHashWithByteArray(rootNode.getRootBlock().getThisBlockHash()))
-            return findBlockInTree(rootNode.getRightBlockBinarySearchTreeNode(), block);
-        else if (rootNode == null) {
+        if (rootNode != null) {
+            if (Objects.equals(rootNode.getRootBlock(), block)) {
+                return block;
+            } else if (calculateBlockHashWithByteArray(block.getThisBlockHash()) < calculateBlockHashWithByteArray(rootNode.getRootBlock().getThisBlockHash())) {
+                return findBlockInTree(rootNode.getLeftBlockBinarySearchTreeNode(), block);
+            } else if (calculateBlockHashWithByteArray(block.getThisBlockHash()) > calculateBlockHashWithByteArray(rootNode.getRootBlock().getThisBlockHash()))
+                return findBlockInTree(rootNode.getRightBlockBinarySearchTreeNode(), block);
+            else if (rootNode == null) {
+                return null;
+            }
             return null;
         }
         return null;

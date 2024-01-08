@@ -10,8 +10,10 @@ public class TransactionBinarySearchTree {
 
     protected TransactionBinarySearchTree (ArrayList<Transaction> unsortedArrayList) {
         this.unsortedArrayList = unsortedArrayList;
-        rootNode = new TransactionBinarySearchTreeNode(unsortedArrayList.get(0), null, null);
-        binaryTreeFromArrayList(rootNode, unsortedArrayList);
+        if (unsortedArrayList != null) {
+            rootNode = new TransactionBinarySearchTreeNode(unsortedArrayList.get(0), null, null);
+            binaryTreeFromArrayList(rootNode, unsortedArrayList);
+        }
     }
 
     private void binaryTreeFromArrayList(TransactionBinarySearchTreeNode node, ArrayList<Transaction> unsortedArrayList)  {
@@ -52,13 +54,16 @@ public class TransactionBinarySearchTree {
     }
 
     public Transaction findTransactionInTree(TransactionBinarySearchTreeNode rootNode, Transaction transaction) {
-        if (Objects.equals(rootNode.getRootTransaction(), transaction)) {
-            return transaction;
-        } else if (calculateTransactionHashWithByteArray(transaction.getTransactionHash()) < calculateTransactionHashWithByteArray(rootNode.getRootTransaction().getTransactionHash())) {
-            return findTransactionInTree(rootNode.getLeftTransactionBinarySearchTreeNode(), transaction);
-        } else if (calculateTransactionHashWithByteArray(transaction.getTransactionHash()) > calculateTransactionHashWithByteArray(rootNode.getRootTransaction().getTransactionHash()))
-            return findTransactionInTree(rootNode.getRightTransactionBinarySearchTreeNode(), transaction);
-        else if (rootNode == null) {
+        if (rootNode != null) {
+            if (Objects.equals(rootNode.getRootTransaction(), transaction)) {
+                return transaction;
+            } else if (calculateTransactionHashWithByteArray(transaction.getTransactionHash()) < calculateTransactionHashWithByteArray(rootNode.getRootTransaction().getTransactionHash())) {
+                return findTransactionInTree(rootNode.getLeftTransactionBinarySearchTreeNode(), transaction);
+            } else if (calculateTransactionHashWithByteArray(transaction.getTransactionHash()) > calculateTransactionHashWithByteArray(rootNode.getRootTransaction().getTransactionHash()))
+                return findTransactionInTree(rootNode.getRightTransactionBinarySearchTreeNode(), transaction);
+            else if (rootNode == null) {
+                return null;
+            }
             return null;
         }
         return null;

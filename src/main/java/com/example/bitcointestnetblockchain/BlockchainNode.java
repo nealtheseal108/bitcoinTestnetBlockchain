@@ -12,7 +12,7 @@ import java.util.Objects;
 public class BlockchainNode {
     private Blockchain blockchain;
     private final String username;
-    private final byte[] address;
+    private byte[] address;
     private int balance;
     ArrayList<Transaction> inputTransactionList;
     private ArrayList<Transaction> outputTransactionList;
@@ -21,7 +21,11 @@ public class BlockchainNode {
     public BlockchainNode(Blockchain blockchain, String username) throws NoSuchAlgorithmException {
         this.blockchain = blockchain;
         this.username = username;
-        this.address = digest.digest(username.getBytes(StandardCharsets.UTF_16));
+        if (username != null) {
+            this.address = digest.digest(username.getBytes(StandardCharsets.UTF_16));
+        } else {
+            this.address = null;
+        }
         this.balance = 0;
         inputTransactionList = new ArrayList<>();
         outputTransactionList = new ArrayList<>();
@@ -88,13 +92,12 @@ public class BlockchainNode {
         System.out.println("\t\tNon-coinbase transactions");
         ArrayList<byte[]> coinbaseTransactions = new ArrayList<>();
 
-        for (int i = 0; i < inputTransactionList.size(); i++) {
-            Transaction inputTransaction = inputTransactionList.get(i);
+        for (Transaction inputTransaction : inputTransactionList) {
             if (Arrays.equals(inputTransaction.getFromAddress(), null)) {
                 coinbaseTransactions.add(inputTransaction.getTransactionHash());
             } else {
                 if (inputTransaction.getFromAddress() != null) {
-                    System.out.println("\t\t\t" +  Base64.getEncoder().encodeToString(inputTransaction.getTransactionHash()) + ": " + Base64.getEncoder().encodeToString(inputTransaction.getFromAddress()) + " sent " + inputTransaction.getTransferAmount() + " coins to this node.");
+                    System.out.println("\t\t\t" + Base64.getEncoder().encodeToString(inputTransaction.getTransactionHash()) + ": " + Base64.getEncoder().encodeToString(inputTransaction.getFromAddress()) + " sent " + inputTransaction.getTransferAmount() + " coins to this node.");
                 }
             }
         }
@@ -113,9 +116,9 @@ public class BlockchainNode {
 
         System.out.println("\t This node's output transactions");
         if (!outputTransactionList.isEmpty()) {
-            for (int i = 0; i < outputTransactionList.size(); i++) {
+            for (Transaction transaction : outputTransactionList) {
                 System.out.print("\t\t\t");
-                Transaction outputTransaction = outputTransactionList.get(i);
+                Transaction outputTransaction = transaction;
                 System.out.println(Base64.getEncoder().encodeToString(outputTransaction.getTransactionHash()) + ": this address sent " + outputTransaction.getTransferAmount() + " coins to " + Base64.getEncoder().encodeToString(outputTransaction.getToAddress()) + ".");
             }
         } else {
