@@ -124,9 +124,8 @@ public class BlockchainInterface {
         BlockchainNode neelNode = new BlockchainNode(blockchain, "neel");
         /* should return */ System.out.println(blockchain.getBlockchainNodeWithTree(neelNode));
 
-        // attempt to retrieve three blocks, two of which are present in the blockchain and one of which is not
+        // attempt to retrieve two blocks, one of which is present in the blockchain and one of which is not
         /* should return */ System.out.println((blockchain.getBlockWithTree(block0)));
-        /* should be null */ System.out.println(blockchain.getBlockWithTree(new Block(blockchain, false, block1.getPrevHash(), block1.getTransactions(), block1.getMinerAddress())));
         /* should be null */ System.out.println((blockchain.getBlockWithTree(new Block(blockchain, false, block2.getPrevHash(), block3.getTransactions(), block1.getMinerAddress()))));
 
         // attempt to retrieve two blockchain nodes in 'block3', both of which are not present in the block
