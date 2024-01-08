@@ -63,17 +63,9 @@ public class Block {
         }
         this.thisBlockHash = digest.digest(blockHashPreHashConcat);
 
-        ArrayList<TransactionBinarySearchTreeNode> transactionsSearchTreeInputArrayList = new ArrayList<TransactionBinarySearchTreeNode>();
-        for (Transaction transaction: transactions) {
-            transactionsSearchTreeInputArrayList.add(new TransactionBinarySearchTreeNode(transaction, null, null));
-        }
-        transactionSearchTree = new TransactionBinarySearchTree(transactionsSearchTreeInputArrayList);
+        transactionSearchTree = new TransactionBinarySearchTree(transactions);
 
-        ArrayList<BlockchainNodeBinarySearchTreeNode> blockchainNodeBinarySearchTreeInputArrayList = new ArrayList<BlockchainNodeBinarySearchTreeNode>();
-        for (BlockchainNode currentNode: blockchainNodes) {
-            blockchainNodeBinarySearchTreeInputArrayList.add(new BlockchainNodeBinarySearchTreeNode(currentNode, null, null));
-        }
-        blockchainNodeSearchTree = new BlockchainNodeBinarySearchTree(blockchainNodeBinarySearchTreeInputArrayList);
+        blockchainNodeSearchTree = new BlockchainNodeBinarySearchTree(blockchainNodes);
     }
 
     public boolean isGenesis() {
@@ -114,5 +106,23 @@ public class Block {
 
     public BlockchainNodeBinarySearchTree getBlockchainNodeBinarySearchTree() {
         return blockchainNodeSearchTree;
+    }
+
+    public Transaction getTransactionWithTree(Transaction transaction) {
+        ArrayList<Transaction> arrayListOfTransactions = new ArrayList<Transaction>();
+        for (Transaction currentTransaction: transactions) {
+            arrayListOfTransactions.add(currentTransaction);
+        }
+        TransactionBinarySearchTree transactionBinarySearchTree = new TransactionBinarySearchTree(arrayListOfTransactions);
+        return transactionBinarySearchTree.findTransactionInTree(transactionBinarySearchTree.rootNode, transaction);
+    }
+
+    public BlockchainNode getBlockchainNodeWithTree(BlockchainNode blockchainNode) {
+        ArrayList<BlockchainNode> arrayListOfBlockchainNodes = new ArrayList<BlockchainNode>();
+        for (BlockchainNode currentBlockchainNode: blockchainNodes) {
+            arrayListOfBlockchainNodes.add(currentBlockchainNode);
+        }
+        BlockchainNodeBinarySearchTree blockchainNodeBinarySearchTree = new BlockchainNodeBinarySearchTree(arrayListOfBlockchainNodes);
+        return blockchainNodeBinarySearchTree.findBlockchainNodeInTree(blockchainNodeBinarySearchTree.rootNode, blockchainNode);
     }
 }

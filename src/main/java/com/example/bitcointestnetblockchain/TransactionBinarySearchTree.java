@@ -4,28 +4,45 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class TransactionBinarySearchTree {
-    protected ArrayList<TransactionBinarySearchTreeNode> unsortedArrayList;
+    protected ArrayList<Transaction> unsortedArrayList;
     protected TransactionBinarySearchTreeNode rootNode;
     protected int iterator;
 
-    protected TransactionBinarySearchTree (ArrayList<TransactionBinarySearchTreeNode> unsortedArrayList) {
+    protected TransactionBinarySearchTree (ArrayList<Transaction> unsortedArrayList) {
         this.unsortedArrayList = unsortedArrayList;
-        rootNode = unsortedArrayList.get(0);
-        binaryTreeFromArrayList(rootNode, 0);
+        rootNode = new TransactionBinarySearchTreeNode(unsortedArrayList.get(0), null, null);
+        binaryTreeFromArrayList(rootNode, unsortedArrayList);
     }
 
-    private void binaryTreeFromArrayList(TransactionBinarySearchTreeNode node, int iterator)  {
-        if (calculateTransactionHashWithByteArray(unsortedArrayList.get(iterator).getRootTransaction().getTransactionHash()) < calculateTransactionHashWithByteArray(node.rootTransaction.getTransactionHash())) {
-            this.iterator++;
-            binaryTreeFromArrayList(new TransactionBinarySearchTreeNode(node.getLeftTransactionBinarySearchTreeNode().getRootTransaction(), null, null), this.iterator);
-            node.setLeftTransactionBinarySearchTreeNode(node.getLeftTransactionBinarySearchTreeNode());
-        }
-        else {
-            this.iterator++;
-            binaryTreeFromArrayList(new TransactionBinarySearchTreeNode(node.getRightTransactionBinarySearchTreeNode().getRootTransaction(), null, null), this.iterator);
-            node.setRightTransactionBinarySearchTreeNode(node.getRightTransactionBinarySearchTreeNode());
+    private void binaryTreeFromArrayList(TransactionBinarySearchTreeNode node, ArrayList<Transaction> unsortedArrayList)  {
+        for (Transaction transaction: unsortedArrayList) {
+            if (transaction == null) {
+                continue;
+            } else {
+                recursiveTransactionPlacementInTree(node, transaction);
+            }
         }
     }
+
+    private void recursiveTransactionPlacementInTree(TransactionBinarySearchTreeNode node, Transaction transaction) {
+        byte[] givenTransactionHash = transaction.getTransactionHash();
+        byte[] nodeTransactionHash = node.getRootTransaction().getTransactionHash();
+
+        if (calculateTransactionHashWithByteArray(givenTransactionHash) <= calculateTransactionHashWithByteArray(nodeTransactionHash)) {
+            if (node.getLeftTransactionBinarySearchTreeNode() == null) {
+                node.setLeftTransactionBinarySearchTreeNode(new TransactionBinarySearchTreeNode(transaction, null, null));
+            } else {
+                recursiveTransactionPlacementInTree(node.getLeftTransactionBinarySearchTreeNode(), transaction);
+            }
+        } else {
+            if (node.getRightTransactionBinarySearchTreeNode() == null) {
+                node.setRightTransactionBinarySearchTreeNode(new TransactionBinarySearchTreeNode(transaction, null, null));
+            } else {
+                recursiveTransactionPlacementInTree(node.getRightTransactionBinarySearchTreeNode(), transaction);
+            }
+        }
+    }
+
     private long calculateTransactionHashWithByteArray(byte[] TransactionHash) {
         long sum = 0;
         for (byte i: TransactionHash) {
@@ -34,14 +51,13 @@ public class TransactionBinarySearchTree {
         return sum;
     }
 
-    public TransactionBinarySearchTreeNode findTransactionInTree(TransactionBinarySearchTreeNode rootNode, TransactionBinarySearchTreeNode blockchainNode) {
-        if (Objects.equals(rootNode, blockchainNode)) {
-            return rootNode;
-        } else if (calculateTransactionHashWithByteArray(blockchainNode.getRootTransaction().getTransactionHash()) < calculateTransactionHashWithByteArray(rootNode.getRootTransaction().getTransactionHash())) {
-            findTransactionInTree(rootNode.getLeftTransactionBinarySearchTreeNode(), blockchainNode);
-        } else if (calculateTransactionHashWithByteArray(blockchainNode.getRootTransaction().getTransactionHash()) > calculateTransactionHashWithByteArray(rootNode.getRootTransaction().getTransactionHash())) {
-            findTransactionInTree(rootNode.getRightTransactionBinarySearchTreeNode(), blockchainNode);
-        }
+    public Transaction findTransactionInTree(TransactionBinarySearchTreeNode rootNode, Transaction transaction) {
+        if (Objects.equals(rootNode.getRootTransaction(), transaction)) {
+            return transaction;
+        } else if (calculateTransactionHashWithByteArray(transaction.getTransactionHash()) < calculateTransactionHashWithByteArray(rootNode.getRootTransaction().getTransactionHash())) {
+            findTransactionInTree(rootNode.getLeftTransactionBinarySearchTreeNode(), transaction);
+        } else if (calculateTransactionHashWithByteArray(transaction.getTransactionHash()) > calculateTransactionHashWithByteArray(rootNode.getRootTransaction().getTransactionHash()))
+            findTransactionInTree(rootNode.getRightTransactionBinarySearchTreeNode(), transaction);
         else if (rootNode == null) {
             return null;
         }

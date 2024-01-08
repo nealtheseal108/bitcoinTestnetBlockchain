@@ -48,4 +48,8 @@ class TotalBlockchainNodeList {
         }
     }
 
+    public ArrayList<BlockchainNode> getBlockchainNodeList() {
+        return this.BlockchainNodeList;
+    }
+
 }

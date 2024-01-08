@@ -117,4 +117,22 @@ public class Blockchain {
         return null;
     }
 
+    public Block getBlockWithTree(Block block) {
+        ArrayList<Block> arrayListOfBlocks = new ArrayList<Block>();
+        for (Block currentBlock: blockchain) {
+            arrayListOfBlocks.add(currentBlock);
+        }
+        BlockBinarySearchTree blockBinarySearchTree = new BlockBinarySearchTree(arrayListOfBlocks);
+        return blockBinarySearchTree.findBlockInTree(blockBinarySearchTree.rootNode, block);
+    }
+
+    public BlockchainNode getBlockchainNodeWithTree(BlockchainNode blockchainNode) {
+        ArrayList<BlockchainNode> arrayListOfBlockchainNodes = new ArrayList<BlockchainNode>();
+        for (BlockchainNode currentBlockchainNode: totalBlockchainNodeList.getBlockchainNodeList()) {
+            arrayListOfBlockchainNodes.add(currentBlockchainNode);
+        }
+        BlockchainNodeBinarySearchTree blockchainNodeBinarySearchTree = new BlockchainNodeBinarySearchTree(arrayListOfBlockchainNodes);
+        return blockchainNodeBinarySearchTree.findBlockchainNodeInTree(blockchainNodeBinarySearchTree.rootNode, blockchainNode);
+    }
+
 }
